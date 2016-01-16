@@ -6,7 +6,8 @@ var GameFramework = function () {
 	var frameDelta = 0;
 	var prevFrameTime = 0;
 	var inputStates = {};
-	
+	var firstFrame = true;
+
 	var getFPS = function () {
 		return fps;
 	};
@@ -21,6 +22,10 @@ var GameFramework = function () {
 	};
 
 	var	countFrameDelta = function (time) {
+		if (firstFrame) {
+			firstFrame = false;
+			prevFrameTime = time;
+		}
 		frameDelta = time - prevFrameTime;
 		prevFrameTime = time;
 	};
@@ -29,7 +34,7 @@ var GameFramework = function () {
 		countFrameDelta(time);
 		countFPS(time);
 
-		drawFrame();
+		drawFrame(time);
 
 		requestAnimationFrame(mainLoop);
 	};
@@ -66,6 +71,10 @@ var GameFramework = function () {
 		return inputStates;
 	};
 
+	var getFrameDelta = function () {
+		return frameDelta;
+	};
+
 	/** 
 	 * Framework's public interface
 	 */
@@ -75,6 +84,7 @@ var GameFramework = function () {
 			drawFrame = drawFrameFunction;
 		},
 		getFPS: getFPS,
+		getFrameDelta: getFrameDelta,
 		getInputState: getInputState,
 		setInputListeners: setInputListeners,
 		convertSpeed: convertSpeed

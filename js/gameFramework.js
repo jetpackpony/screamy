@@ -90,3 +90,28 @@ var GameFramework = function () {
 		convertSpeed: convertSpeed
 	};
 };
+
+function DrawableObject(options, context, framework) {
+	this._defaults = {
+		x: 0, y: 0, speedX: 0, speedY: 0, aX: 0, aY: 0
+	};
+
+	this._coordinates = {
+		x: options.x || this._defaults.x,
+		y: options.y || this._defaults.y
+	};
+	this._speed = {
+		x: options.speedX || this._defaults.speedX,
+		y: options.speedY || this._defaults.speedY
+	};
+	this._acceleration = {
+		x: options.aX || this._defaults.aX,
+		y: options.aY || this._defaults.aY
+	};
+	this._ctx = context;
+	this._framework = framework;
+};
+DrawableObject.prototype.setAcceleration = function (newAccs) {
+	if (newAccs.x !== undefined) this._acceleration.x = newAccs.x;
+	if (newAccs.y !== undefined) this._acceleration.y = newAccs.y;
+};

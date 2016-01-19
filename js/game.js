@@ -11,187 +11,69 @@ var minY, maxY = 0;
 
 var bgImage;
 
-function Player(options) {
-	var defaults = {
-		speedX: 0, speedY: 0, aX: 0, aY: 0, x: 0, y: 0
-	};
-
-	var speedX = options.speedX || defaults.speedX;
-	var speedY = options.speedY || defaults.speedY;
-	var aX = options.aX || defaults.aX;
-	var aY = options.aY || defaults.aY;
-	var x = options.x || defaults.x;
-	var y = options.y || defaults.y;
-	var yInc = 0;
-
-	function setSpeed (newSpeeds) {
-		speedX = newSpeeds.speedX || speedX;
-		speedY = newSpeeds.speedY || speedY;
-	}
-
-	function setAcceleration (newAccs) {
-		aX = newAccs.aX || aX;
-		aY = newAccs.aY || aY;
-	}
-
-	function draw() {
-		ctx.fillStyle = "black";
-		ctx.fillRect(x, y, 30, 30);
-
-		// Changing the positionS
-		speedY += aY * framework.getFrameDelta() / 1000;
-		yInc = framework.convertSpeed(speedY);
-		if (y + yInc > maxY) {
-			yInc = maxY - y;
-			speedY = 0;
-			aY = 0;
-		}
-		if (y + yInc < minY) {
-			yInc = minY - y;
-			speedY = 0;
-			aY = 0;
-		}
-		y += yInc;
-		y = y;
-	}
-
-	function getPosition () {
-		return {
-			x: x, y: y, radius: calcRadius()
-		}
-	}
-
-	function calcRadius () {
-		return 20;
-	}
-
-	return {
-		draw: draw,
-		setSpeed: setSpeed,
-		setAcceleration: setAcceleration
-	};
+function Player(options, context, framework) {
+	DrawableObject.call(this, options, context, framework);
 }
+Player.prototype = new DrawableObject({}, null, null);
+Player.prototype.draw = function () {
+	this._ctx.fillStyle = "black";
+	this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
 
-function Background(options) {
-	var defaults = {
-		speedX: 0, speedY: 0, aX: 0, aY: 0, x: 0, y: 0
-	};
-
-	var speedX = options.speedX || defaults.speedX;
-	var speedY = options.speedY || defaults.speedY;
-	var aX = options.aX || defaults.aX;
-	var aY = options.aY || defaults.aY;
-	var x = options.x || defaults.x;
-	var y = options.y || defaults.y;
-	var yInc = 0;
-
-	function setSpeed (newSpeeds) {
-		speedX = newSpeeds.speedX || speedX;
-		speedY = newSpeeds.speedY || speedY;
+	// Changing the position
+	this._speed.y += this._acceleration.y * this._framework.getFrameDelta() / 1000;
+	var yInc = framework.convertSpeed(this._speed.y);
+	if (this._coordinates.y + yInc > maxY) {
+		yInc = maxY - this._coordinates.y;
+		this._speed.y = 0;
+		this.setAcceleration({y: 0});
 	}
-
-	function setAcceleration (newAccs) {
-		aX = newAccs.aX || aX;
-		aY = newAccs.aY || aY;
+	if (this._coordinates.y + yInc < minY) {
+		yInc = minY - this._coordinates.y;
+		this._speed.y = 0;
+		this.setAcceleration({y: 0});
 	}
+	this._coordinates.y += yInc;
+};
 
-	function draw() {
-		var scaled_width = bgImage.width * (height / bgImage.height);
-		x += framework.convertSpeed(speedX);
-		ctx.globalAlpha = 0.3;
-		ctx.drawImage(bgImage, x, 0, scaled_width, height);
-		ctx.drawImage(bgImage, x + scaled_width, 0, scaled_width, height);
-		if (Math.abs(x) >= scaled_width) {
-			x = 0;
-		}
-		ctx.globalAlpha = 1;
-	}
-
-	function getPosition () {
-		return {
-			x: x, y: y, radius: calcRadius()
-		}
-	}
-
-	function calcRadius () {
-		return 20;
-	}
-
-	return {
-		draw: draw,
-		setSpeed: setSpeed,
-		setAcceleration: setAcceleration
-	};
+function Background(options, context, framework) {
+	DrawableObject.call(this, options, context, framework);
 }
+Background.prototype = new DrawableObject({}, null, null);
+Background.prototype.draw = function () {
+	var scaled_width = bgImage.width * (height / bgImage.height);
+	this._coordinates.x += this._framework.convertSpeed(this._speed.x);
 
-function Brick(options) {
-	var defaults = {
-		speedX: 0, speedY: 0, aX: 0, aY: 0, x: 0, y: 0
-	};
-
-	var speedX = options.speedX || defaults.speedX;
-	var speedY = options.speedY || defaults.speedY;
-	var aX = options.aX || defaults.aX;
-	var aY = options.aY || defaults.aY;
-	var x = options.x || defaults.x;
-	var y = options.y || defaults.y;
-	var yInc = 0;
-
-	function setSpeed (newSpeeds) {
-		speedX = newSpeeds.speedX || speedX;
-		speedY = newSpeeds.speedY || speedY;
+	this._ctx.globalAlpha = 0.3;
+	this._ctx.drawImage(bgImage, this._coordinates.x, 0, scaled_width, height);
+	this._ctx.drawImage(bgImage, this._coordinates.x + scaled_width, 0, scaled_width, height);
+	if (Math.abs(this._coordinates.x) >= scaled_width) {
+		this._coordinates.x = 0;
 	}
+	this._ctx.globalAlpha = 1;
+};
 
-	function setAcceleration (newAccs) {
-		aX = newAccs.aX || aX;
-		aY = newAccs.aY || aY;
-	}
+function Brick(options, context, framework) {
+	DrawableObject.call(this, options, context, framework);
+}
+Brick.prototype = new DrawableObject({}, null, null);
+Brick.prototype.draw = function () {
+	this._ctx.fillStyle = "red";
+	this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
 
-	function draw() {
-		ctx.fillStyle = "red";
-		ctx.fillRect(x, y, 30, 30);
-
-		// Changing the positionS
-		speedX += aX * framework.getFrameDelta() / 1000;
-		xInc = framework.convertSpeed(speedX);
-		// if (y + xInc > maxX) {
-		// 	xInc = maxX - y;
-		// 	speedX = 0;
-		// 	aY = 0;
-		// }
-		// if (y + xInc < minY) {
-		// 	xInc = minY - y;
-		// 	speedX = 0;
-		// 	aY = 0;
-		// }
-		x += xInc;
-	}
-
-	function getPosition () {
-		return {
-			x: x, y: y, radius: calcRadius()
-		}
-	}
-
-	function calcRadius () {
-		return 20;
-	}
-
-	return {
-		draw: draw,
-		setSpeed: setSpeed,
-		setAcceleration: setAcceleration
-	};
+	// Changing the positionS
+	this._speed.x += this._acceleration.x * this._framework.getFrameDelta() / 1000;
+	var xInc = this._framework.convertSpeed(this._speed.x);
+	this._coordinates.x += xInc;
 }
 
 var drawFrame = function (time) {
 	document.querySelector("#fps span").innerHTML = framework.getFPS();
 	if (framework.getInputState().up) {
 		text = "up";
-		player.setAcceleration({aY: aG * -3});
+		player.setAcceleration({y: aG * -3});
 	} else {
 		text = "nothing";
-		player.setAcceleration({aY: aG});
+		player.setAcceleration({y: aG});
 	}
 	document.querySelector("#inputStates span").innerHTML = text;
 
@@ -205,7 +87,9 @@ var drawFrame = function (time) {
 	player.draw();
 
 	// Draw the brick
-	brick.draw();
+	bricks.forEach(function (brick) {
+		brick.draw();
+	});
 }
 
 window.onload = function init() {
@@ -229,15 +113,28 @@ window.onload = function init() {
 		aY: aG,
 		x: 30,
 		y: 30
-	});
+	}, ctx, framework);
 
 	background = new Background({
 		speedX: -100
-	});
+	}, ctx, framework);
 
-	brick = new Brick({
+	bricks = [];
+	bricks.push(new Brick({
 		x: width,
 		y: 100,
 		speedX: -100
-	});
+	}, ctx, framework));
+
+	bricks.push(new Brick({
+		x: width,
+		y: 160,
+		speedX: -100
+	}, ctx, framework));
+
+	bricks.push(new Brick({
+		x: width,
+		y: 200,
+		speedX: -100
+	}, ctx, framework));
 }

@@ -115,3 +115,19 @@ DrawableObject.prototype.setAcceleration = function (newAccs) {
 	if (newAccs.x !== undefined) this._acceleration.x = newAccs.x;
 	if (newAccs.y !== undefined) this._acceleration.y = newAccs.y;
 };
+DrawableObject.prototype.calculateCoordinates = function () {
+	var delta = this._framework.getFrameDelta() / 1000;
+	this._speed.y += this._acceleration.y * delta;
+	this._coordinates.y += framework.convertSpeed(this._speed.y);
+
+	this._speed.x += this._acceleration.x * delta;
+	this._coordinates.x += framework.convertSpeed(this._speed.x);
+};
+DrawableObject.prototype.stop = function () {
+	this._speed.y = 0;
+	this.setAcceleration({y: 0});
+};
+DrawableObject.prototype.drawFrame = function () {
+	this.calculateCoordinates();
+	this.draw();
+};

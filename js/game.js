@@ -11,6 +11,9 @@ var minY, maxY = 0;
 
 var bgImage;
 
+var bgSpeed = -100;
+var prevtime = 0;
+
 function Player(options, context, framework) {
 	DrawableObject.call(this, options, context, framework);
 }
@@ -20,19 +23,14 @@ Player.prototype.draw = function () {
 	this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
 
 	// Changing the position
-	this._speed.y += this._acceleration.y * this._framework.getFrameDelta() / 1000;
-	var yInc = framework.convertSpeed(this._speed.y);
-	if (this._coordinates.y + yInc > maxY) {
-		yInc = maxY - this._coordinates.y;
-		this._speed.y = 0;
-		this.setAcceleration({y: 0});
+	if (this._coordinates.y > maxY) {
+		this._coordinates.y = maxY;
+		this.stop();
 	}
-	if (this._coordinates.y + yInc < minY) {
-		yInc = minY - this._coordinates.y;
-		this._speed.y = 0;
-		this.setAcceleration({y: 0});
+	if (this._coordinates.y < minY) {
+		this._coordinates.y = minY;
+		this.stop();
 	}
-	this._coordinates.y += yInc;
 };
 
 function Background(options, context, framework) {
@@ -41,7 +39,6 @@ function Background(options, context, framework) {
 Background.prototype = new DrawableObject({}, null, null);
 Background.prototype.draw = function () {
 	var scaled_width = bgImage.width * (height / bgImage.height);
-	this._coordinates.x += this._framework.convertSpeed(this._speed.x);
 
 	this._ctx.globalAlpha = 0.3;
 	this._ctx.drawImage(bgImage, this._coordinates.x, 0, scaled_width, height);
@@ -59,14 +56,10 @@ Brick.prototype = new DrawableObject({}, null, null);
 Brick.prototype.draw = function () {
 	this._ctx.fillStyle = "red";
 	this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
-
-	// Changing the positionS
-	this._speed.x += this._acceleration.x * this._framework.getFrameDelta() / 1000;
-	var xInc = this._framework.convertSpeed(this._speed.x);
-	this._coordinates.x += xInc;
 }
 
 var drawFrame = function (time) {
+	// Respond to inputs
 	document.querySelector("#fps span").innerHTML = framework.getFPS();
 	if (framework.getInputState().up) {
 		text = "up";
@@ -77,18 +70,29 @@ var drawFrame = function (time) {
 	}
 	document.querySelector("#inputStates span").innerHTML = text;
 
+	// Create the bricks
+	if (time - prevtime > 1000) {
+		prevtime = time;
+		bricks.push(new Brick({
+			x: width,
+			y: Math.floor((Math.random() * height) + 1),
+			speedX: bgSpeed
+		}, ctx, framework));
+	}
+
+	// Draw the thing
 	// Clear the canvas
 	ctx.clearRect(0, 0, width, height);
 
 	// Draw the background
-	background.draw();
+	background.drawFrame();
 
 	// Draw the player
-	player.draw();
+	player.drawFrame();
 
 	// Draw the brick
 	bricks.forEach(function (brick) {
-		brick.draw();
+		brick.drawFrame();
 	});
 }
 
@@ -116,25 +120,8 @@ window.onload = function init() {
 	}, ctx, framework);
 
 	background = new Background({
-		speedX: -100
+		speedX: bgSpeed
 	}, ctx, framework);
 
 	bricks = [];
-	bricks.push(new Brick({
-		x: width,
-		y: 100,
-		speedX: -100
-	}, ctx, framework));
-
-	bricks.push(new Brick({
-		x: width,
-		y: 160,
-		speedX: -100
-	}, ctx, framework));
-
-	bricks.push(new Brick({
-		x: width,
-		y: 200,
-		speedX: -100
-	}, ctx, framework));
 }

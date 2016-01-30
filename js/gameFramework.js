@@ -93,12 +93,15 @@ var GameFramework = function () {
 
 function DrawableObject(options, context, framework) {
 	this._defaults = {
-		x: 0, y: 0, speedX: 0, speedY: 0, aX: 0, aY: 0
+		x: 0, y: 0, speedX: 0, speedY: 0, aX: 0, aY: 0, radius: 20
 	};
 
 	this._coordinates = {
 		x: options.x || this._defaults.x,
 		y: options.y || this._defaults.y
+	};
+	this._measures = {
+		radius: options.radius || this._defaults.radius
 	};
 	this._speed = {
 		x: options.speedX || this._defaults.speedX,
@@ -130,4 +133,21 @@ DrawableObject.prototype.stop = function () {
 DrawableObject.prototype.drawFrame = function () {
 	this.calculateCoordinates();
 	this.draw();
+};
+DrawableObject.prototype.getCoordinates = function () {
+	return {
+		x: this._coordinates.x,
+		y: this._coordinates.y,
+		r: this._measures.radius,
+	};
+};
+DrawableObject.prototype.isCollidingWith = function (object) {
+	var dx = this._coordinates.x - object.getCoordinates().x;
+	var dy = this._coordinates.y - object.getCoordinates().y;
+	var radSum = this._measures.radius + object.getCoordinates().r;
+
+	if (dx * dx + dy * dy <= radSum * radSum) {
+		return true;
+	}
+	return false;
 };

@@ -14,13 +14,20 @@ var bgImage;
 var bgSpeed = -100;
 var prevtime = 0;
 
+var collisionCount = 0;
+
+
 function Player(options, context, framework) {
 	DrawableObject.call(this, options, context, framework);
 }
 Player.prototype = new DrawableObject({}, null, null);
 Player.prototype.draw = function () {
+	// this._ctx.fillStyle = "black";
+	// this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
+	this._ctx.beginPath();
 	this._ctx.fillStyle = "black";
-	this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
+	this._ctx.arc(this._coordinates.x, this._coordinates.y, this._measures.radius, 0, 2*Math.PI);
+	this._ctx.fill();
 
 	// Changing the position
 	if (this._coordinates.y > maxY) {
@@ -54,8 +61,12 @@ function Brick(options, context, framework) {
 }
 Brick.prototype = new DrawableObject({}, null, null);
 Brick.prototype.draw = function () {
+	// this._ctx.fillStyle = "red";
+	// this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
+	this._ctx.beginPath();
 	this._ctx.fillStyle = "red";
-	this._ctx.fillRect(this._coordinates.x, this._coordinates.y, 30, 30);
+	this._ctx.arc(this._coordinates.x, this._coordinates.y, this._measures.radius, 0, 2*Math.PI);
+	this._ctx.fill();
 }
 
 var drawFrame = function (time) {
@@ -69,12 +80,13 @@ var drawFrame = function (time) {
 		player.setAcceleration({y: aG});
 	}
 	document.querySelector("#inputStates span").innerHTML = text;
+	document.querySelector("#collisionCount span").innerHTML = collisionCount;
 
 	// Create the bricks
 	if (time - prevtime > 1000) {
 		prevtime = time;
 		bricks.push(new Brick({
-			x: width,
+			x: width + 20,
 			y: Math.floor((Math.random() * height) + 1),
 			speedX: bgSpeed
 		}, ctx, framework));
@@ -92,6 +104,10 @@ var drawFrame = function (time) {
 
 	// Draw the brick
 	bricks.forEach(function (brick) {
+		if (!brick.collided && brick.isCollidingWith(player)) {
+			collisionCount++;
+			brick.collided = true;
+		}
 		brick.drawFrame();
 	});
 }
@@ -101,8 +117,8 @@ window.onload = function init() {
 	ctx = canvas.getContext('2d');
 	width = canvas.width;
 	height = canvas.height;
-	minY = 1;
-	maxY = height - 31;
+	minY = 21;
+	maxY = height - 21;
 	aG = Math.round(height * 0.75);
 
 	bgImage = new Image();
@@ -124,4 +140,9 @@ window.onload = function init() {
 	}, ctx, framework);
 
 	bricks = [];
+	bricks.push(new Brick({
+		x: width + 20,
+		y: Math.floor((Math.random() * height) + 1),
+		speedX: bgSpeed
+	}, ctx, framework));
 }

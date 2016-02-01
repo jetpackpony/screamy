@@ -139,6 +139,8 @@ DrawableObject.prototype.getCoordinates = function () {
 		x: this._coordinates.x,
 		y: this._coordinates.y,
 		r: this._measures.radius,
+		left: this._coordinates.x - this._measures.radius,
+		right: this._coordinates.x + this._measures.radius
 	};
 };
 DrawableObject.prototype.isCollidingWith = function (object) {

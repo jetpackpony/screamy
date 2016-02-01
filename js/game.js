@@ -15,7 +15,8 @@ var bgSpeed = -100;
 var prevtime = 0;
 
 var collisionCount = 0;
-
+var bricksNumber = 0;
+var bricksToRemove = [];
 
 function Player(options, context, framework) {
 	DrawableObject.call(this, options, context, framework);
@@ -101,13 +102,22 @@ var drawFrame = function (time) {
 	player.drawFrame();
 
 	// Draw the brick
-	bricks.forEach(function (brick) {
+	bricks.forEach(function (brick, index) {
 		if (!brick.collided && brick.isCollidingWith(player)) {
 			collisionCount++;
 			brick.collided = true;
 		}
 		brick.drawFrame();
+		if (brick.getCoordinates().right <= 0) {
+			bricksToRemove.push(index);
+		}
 	});
+
+	// Remove the unwanted bricks
+	bricksToRemove.forEach(function (el) {
+		bricks.splice(el, 1);
+	});
+	bricksToRemove = [];
 }
 
 window.onload = function init() {

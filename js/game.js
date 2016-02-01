@@ -45,12 +45,10 @@ function Background(options, context, framework) {
 }
 Background.prototype = new DrawableObject({}, null, null);
 Background.prototype.draw = function () {
-	var scaled_width = bgImage.width * (height / bgImage.height);
-
 	this._ctx.globalAlpha = 0.3;
-	this._ctx.drawImage(bgImage, this._coordinates.x, 0, scaled_width, height);
-	this._ctx.drawImage(bgImage, this._coordinates.x + scaled_width, 0, scaled_width, height);
-	if (Math.abs(this._coordinates.x) >= scaled_width) {
+	this._ctx.drawImage(bgImage, this._coordinates.x, 0);
+	this._ctx.drawImage(bgImage, this._coordinates.x + width, 0);
+	if (Math.abs(this._coordinates.x) >= width) {
 		this._coordinates.x = 0;
 	}
 	this._ctx.globalAlpha = 1;
@@ -122,7 +120,7 @@ window.onload = function init() {
 	aG = Math.round(height * 0.75);
 
 	bgImage = new Image();
-	bgImage.src = "img/full-background.png";
+	bgImage.src = "img/full-background_500_1000.png";
 
 	framework = new GameFramework();
 	framework.setDrawFrame(drawFrame);

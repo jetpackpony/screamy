@@ -11,7 +11,7 @@ var minY, maxY = 0;
 
 var bgImage;
 
-var bgSpeed = -100;
+var bgSpeed = -200;
 var prevtime = 0;
 
 var collisionCount = 0;
@@ -71,7 +71,7 @@ Brick.prototype.draw = function () {
 var drawFrame = function (time) {
 	// Respond to inputs
 	document.querySelector("#fps span").innerHTML = framework.getFPS();
-	if (framework.getInputState().up) {
+	if (framework.getInputState().up || framework.getInputState().space) {
 		text = "up";
 		player.setAcceleration({y: aG * -3});
 	} else {
@@ -104,8 +104,9 @@ var drawFrame = function (time) {
 	// Draw the brick
 	bricks.forEach(function (brick, index) {
 		if (!brick.collided && brick.isCollidingWith(player)) {
-			collisionCount++;
-			brick.collided = true;
+			framework.end();
+			// collisionCount++;
+			// brick.collided = true;
 		}
 		brick.drawFrame();
 		if (brick.getCoordinates().right <= 0) {
@@ -134,12 +135,12 @@ window.onload = function init() {
 
 	framework = new GameFramework();
 	framework.setDrawFrame(drawFrame);
-	framework.setInputListeners(['up']);
+	framework.setInputListeners(['up','space']);
 	framework.start();
 
 	player = new Player({
 		aY: aG,
-		x: 30,
+		x: 50,
 		y: 30
 	}, ctx, framework);
 

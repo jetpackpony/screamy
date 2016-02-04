@@ -7,6 +7,7 @@ var GameFramework = function () {
 	var prevFrameTime = 0;
 	var inputStates = {};
 	var firstFrame = true;
+	var gameState = 'stop';
 
 	var getFPS = function () {
 		return fps;
@@ -36,11 +37,18 @@ var GameFramework = function () {
 
 		drawFrame(time);
 
-		requestAnimationFrame(mainLoop);
+		if (gameState == 'running') {
+			requestAnimationFrame(mainLoop);
+		}
 	};
 
 	var start = function () {
+		gameState = 'running';
 		requestAnimationFrame(mainLoop);
+	};
+
+	var end = function () {
+		gameState = 'stop';
 	};
 
 	var convertSpeed = function (speed) {
@@ -52,6 +60,9 @@ var GameFramework = function () {
 	 */
 	var eventListener = function (listenedKey, event, state) {
 		if (listenedKey === 'up' && event.keyCode === 38) {
+			inputStates[listenedKey] = state;
+		}
+		if (listenedKey === 'space' && event.keyCode === 32) {
 			inputStates[listenedKey] = state;
 		}
 	};
@@ -83,6 +94,7 @@ var GameFramework = function () {
 		setDrawFrame: function (drawFrameFunction) {
 			drawFrame = drawFrameFunction;
 		},
+		end: end,
 		getFPS: getFPS,
 		getFrameDelta: getFrameDelta,
 		getInputState: getInputState,

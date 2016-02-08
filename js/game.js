@@ -11,7 +11,7 @@ var minY, maxY = 0;
 
 var bgImage;
 
-var bgSpeed = -500;
+var bgSpeed = -250;
 var prevtime = 0;
 
 var collisionCount = 0;

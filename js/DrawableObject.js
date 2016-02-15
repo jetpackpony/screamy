@@ -42,6 +42,9 @@ DrawableObject.prototype.drawFrame = function () {
   this.calculateCoordinates();
   this.draw();
 };
+DrawableObject.prototype.draw = function () {
+
+};
 DrawableObject.prototype.getCoordinates = function () {
   return {
     x: this._coordinates.x,
@@ -60,4 +63,31 @@ DrawableObject.prototype.isCollidingWith = function (object) {
     return true;
   }
   return false;
+};
+
+DrawableObject.prototype.setSprite = function (imageURL, frameWidth, frameHeight, delayBetweenFrames) {
+  this.image = new Image();
+  this.image.src = imageURL;
+  this.totalTimeSinceLastRedraw = 0;
+  this.currentFrame = 0;
+  this.delayBetweenFrames = delayBetweenFrames;
+  this.then = performance.now();
+  this.width = frameWidth;
+  this.height = frameHeight;
+};
+
+DrawableObject.prototype.drawSpriteFrame = function (x, y) {
+  var now = performance.now();
+  var delta = now - this.then;
+
+  if (this.totalTimeSinceLastRedraw > this.delayBetweenFrames) {
+    this.currentFrame++;
+    this.currentFrame %= 2;
+    this.totalTimeSinceLastRedraw = 0;
+  } else {
+    this. totalTimeSinceLastRedraw += delta;
+  }
+  this.then = now;
+
+  this._ctx.drawImage(this.image, this.currentFrame * this.width, 0, this.width, this.height, x, y, this.width, this.height);
 };

@@ -6,8 +6,8 @@ function Brick(options, context, framework) {
 }
 Brick.prototype = new DrawableObject({}, null, null);
 Brick.prototype.draw = function () {
-  var x = this._coordinates.x - this.image.width / 2;
-  var y = this._coordinates.y - this.image.height / 2;
+  var x = this._coordinates.x - 95 / 2;
+  var y = this._coordinates.y - 70 / 2;
 
   this.drawSpriteFrame(x, y);
 };

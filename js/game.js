@@ -11,7 +11,6 @@ var minY, maxY = 0;
 
 var bgImage;
 
-var bgSpeed = -250;
 var prevtime = 0;
 
 var collisionCount = 0;
@@ -32,12 +31,12 @@ var drawFrame = function (time) {
 	document.querySelector("#collisionCount span").innerHTML = collisionCount;
 
 	// Create the bricks
-	if (time - prevtime > 300) {
+	if (time - prevtime > settings.newBrickDelay) {
 		prevtime = time;
 		bricks.push(new Brick({
 			x: width + 20,
 			y: Math.floor((Math.random() * height) + 1),
-			speedX: bgSpeed
+			speedX: settings.bgSpeed
 		}, ctx, framework));
 	}
 
@@ -78,7 +77,7 @@ window.onload = function init() {
 	height = canvas.height;
 	minY = 21;
 	maxY = height - 21;
-	aG = Math.round(height * 0.75);
+	aG = Math.round(height * settings.aG);
 
 	framework = new GameFramework();
 	framework.setDrawFrame(drawFrame);
@@ -90,7 +89,7 @@ window.onload = function init() {
 	}, ctx, framework);
 
 	background = new Background({
-		speedX: bgSpeed
+		speedX: settings.bgSpeed
 	}, ctx, framework);
 
 	bricks = [];

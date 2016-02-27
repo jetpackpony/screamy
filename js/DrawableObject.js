@@ -65,29 +65,11 @@ DrawableObject.prototype.isCollidingWith = function (object) {
   return false;
 };
 
-DrawableObject.prototype.setSprite = function (imageURL, frameWidth, frameHeight, delayBetweenFrames) {
-  this.image = new Image();
-  this.image.src = imageURL;
-  this.totalTimeSinceLastRedraw = 0;
-  this.currentFrame = 0;
-  this.delayBetweenFrames = delayBetweenFrames;
-  this.then = performance.now();
-  this.width = frameWidth;
-  this.height = frameHeight;
+DrawableObject.prototype.setSprite = function (options) {
+  options.ctx = this._ctx;
+  this.sprite = new Sprite(options);
 };
 
-DrawableObject.prototype.drawSpriteFrame = function (x, y) {
-  var now = performance.now();
-  var delta = now - this.then;
-
-  if (this.totalTimeSinceLastRedraw > this.delayBetweenFrames) {
-    this.currentFrame++;
-    this.currentFrame %= 2;
-    this.totalTimeSinceLastRedraw = 0;
-  } else {
-    this. totalTimeSinceLastRedraw += delta;
-  }
-  this.then = now;
-
-  this._ctx.drawImage(this.image, this.currentFrame * this.width, 0, this.width, this.height, x, y, this.width, this.height);
+DrawableObject.prototype.drawSprite = function (x, y) {
+  this.sprite.draw(x, y);
 };

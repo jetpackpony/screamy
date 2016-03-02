@@ -7,10 +7,10 @@ function Player(options, context, framework) {
 
   this.setSprite({
     // ctx: context,
-    imageURL: "img/png/flying/player_sprite_50.png",
-    frameWidth: 52,
-    frameHeight: 50,
-    framesNum: 8
+    imageURL: "img/png/flying/spritesheet_50_flying.png",
+    frameWidth: 61,
+    frameHeight: 60,
+    framesNum: 4
   });
 
 

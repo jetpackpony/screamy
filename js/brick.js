@@ -3,9 +3,9 @@ function Brick(options, context, framework) {
   DrawableObject.call(this, options, context, framework);
   this.setSprite({
     // ctx: context,
-    imageURL: "img/enemy_png/flying/enemy_sprite_70.png",
-    frameWidth: 95,
-    frameHeight: 70,
+    imageURL: "img/enemy_png/flying/spritesheet_70_enemy.png",
+    frameWidth: 106,
+    frameHeight: 80,
     framesNum: 2
   });
 

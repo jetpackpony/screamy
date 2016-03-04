@@ -54,16 +54,6 @@ DrawableObject.prototype.getCoordinates = function () {
     right: this._coordinates.x + this._measures.radius
   };
 };
-DrawableObject.prototype.isCollidingWith = function (object) {
-  var dx = this._coordinates.x - object.getCoordinates().x;
-  var dy = this._coordinates.y - object.getCoordinates().y;
-  var radSum = this._measures.radius + object.getCoordinates().r;
-
-  if (dx * dx + dy * dy <= radSum * radSum) {
-    return true;
-  }
-  return false;
-};
 
 DrawableObject.prototype.setSprite = function (options) {
   options.ctx = this._ctx;
@@ -73,3 +63,30 @@ DrawableObject.prototype.setSprite = function (options) {
 DrawableObject.prototype.drawSprite = function (x, y) {
   this.sprite.draw(x, y);
 };
+
+DrawableObject.prototype.isCollidingWith = function (object) {
+  if (!isBroadCollision(this._coordinates.x, this._coordinates.y, this.sprite.width, this.sprite.height, object._coordinates.x, object._coordinates.y, object.sprite.width, object.sprite.height)) {
+    return false;
+  }
+  return true;
+
+/*
+  var dx = this._coordinates.x - object.getCoordinates().x;
+  var dy = this._coordinates.y - object.getCoordinates().y;
+  var radSum = this._measures.radius + object.getCoordinates().r;
+
+  if (dx * dx + dy * dy <= radSum * radSum) {
+    return true;
+  }
+  return false;
+*/
+};
+
+var isBroadCollision = function(x1, y1, w1, h1, x2, y2, w2, h2) {
+  return (
+    x1 < x2 + w2 && 
+    x1 + w1 > x2 && 
+    y1 < y2 + h2 && 
+    y1 + h1 > y2
+  );
+}

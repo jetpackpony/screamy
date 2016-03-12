@@ -19,6 +19,9 @@ Collisions = (function() {
     return this.x * other.x + this.y * other.y;
   };
 
+  Vector.prototype.isEqual = function(other) {
+    return this.x === other.x && this.y === other.y;
+  };
 
 
 
@@ -29,8 +32,13 @@ Collisions = (function() {
   }
 
   Projection.prototype.overlap = function(that) {
-    return this.x1 < that.x2 && this.x2 > that.x1;
+    return this.x1 <= that.x2 && this.x2 >= that.x1;
   };
+
+  Projection.prototype.isEqual = function(that) {
+    return this.axis.isEqual(that.axis) && this.x1 === that.x1 && this.x2 === that.x2;
+  };
+  COL.Projection = Projection;
 
 
 
@@ -44,14 +52,12 @@ Collisions = (function() {
 
   Polygon.prototype.isCollidingWith = function (other) {
     // Calc all axes
-    var axes = [];
-    axes.concat(this.getAxes());
-    axes.concat(other.getAxes());
+    var axes = [].concat(this.getAxes()).concat(other.getAxes());
 
-    for(i = 0; i < axes.length; i++) {
+    for (var i = 0; i < axes.length; i++) {
       p1 = this.projectOn(axes[i]);
       p2 = other.projectOn(axes[i]);
-      if (! p1.overlap(p2)) {
+      if (!p1.overlap(p2)) {
         return false;
       }
     }
@@ -62,7 +68,7 @@ Collisions = (function() {
     var cur, min, max;
     min = max = axis.dotProduct(this.points[0]);
 
-    for (var i = this.points.length - 1; i >= 0; i--) {
+    for (var i = 0; i < this.points.length; i++) {
       cur = axis.dotProduct(this.points[i]);
       if (cur <  min)
         min = cur;
@@ -75,7 +81,7 @@ Collisions = (function() {
   Polygon.prototype.getAxes = function() {
     var p1, p2;
     var axes = [];
-    for (var i = this.points.length - 1; i >= 0; i--) {
+    for (var i = 0; i < this.points.length; i++) {
       p1 = this.points[i];
       p2 = this.points[i + 1 == this.points.length ? 0 : i + 1];
       axes.push(p1.substract(p2).perpendicular());
@@ -83,18 +89,14 @@ Collisions = (function() {
     return axes;
   };
 
+  Polygon.CreateNewFromPoints = function() {
+    var points = Array.prototype.slice.call(arguments);
+    var vectors = [];
+    for (var i = 0; i < points.length; i++) {
+      vectors.push(new Vector(points[i][0], points[i][1]));
+    }
+    return new Polygon(vectors);
+  };
+
   return COL;
 }());
-
-
-var p1 = new Collisions.Polygon([
-  new Collisions.Vector(1, 2),
-  new Collisions.Vector(2, 4),
-  new Collisions.Vector(3, 1)
-]);
-
-var p2 = new Collisions.Polygon([
-  new Collisions.Vector(3, 3),
-  new Collisions.Vector(3, 4),
-  new Collisions.Vector(4, 4)
-]);

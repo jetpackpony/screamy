@@ -69,17 +69,6 @@ DrawableObject.prototype.isCollidingWith = function (object) {
     return false;
   }
   return true;
-
-/*
-  var dx = this._coordinates.x - object.getCoordinates().x;
-  var dy = this._coordinates.y - object.getCoordinates().y;
-  var radSum = this._measures.radius + object.getCoordinates().r;
-
-  if (dx * dx + dy * dy <= radSum * radSum) {
-    return true;
-  }
-  return false;
-*/
 };
 
 var isBroadCollision = function(x1, y1, w1, h1, x2, y2, w2, h2) {

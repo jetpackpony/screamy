@@ -9,6 +9,14 @@ function Brick(options, context, framework) {
     framesNum: 2
   });
 
+/*    {
+      x: width + 20,
+      y: Math.floor((Math.random() * height) + 1),
+      speedX: settings.bgSpeed
+    }, ctx, framework));
+*/
+
+
 }
 Brick.prototype = new DrawableObject({}, null, null);
 Brick.prototype.draw = function () {

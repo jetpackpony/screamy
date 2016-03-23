@@ -1,11 +1,10 @@
-Collisions = (function() {
-  var COL = {};
+GameFramework = (function($) {
 
   function Vector(x, y) {
     this.x = x || 0;
     this.y = y || 0;
   }
-  COL.Vector = Vector;
+  $.Vector = Vector;
 
   Vector.prototype.substract = function(other) {
     return new Vector(this.x - other.x, this.y - other.y);
@@ -55,7 +54,7 @@ Collisions = (function() {
     this._calcPoints = [];
     this.setCenter(center || new Vector());
   }
-  COL.Polygon = Polygon;
+  $.Polygon = Polygon;
 
   Polygon.prototype.setCenter = function(new_center) {
     this._center = new_center;
@@ -161,5 +160,5 @@ Collisions = (function() {
     return new Polygon(vectors);
   };
 
-  return COL;
-}());
+  return $;
+}({}));

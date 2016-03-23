@@ -1,4 +1,4 @@
-var GameFramework = (function ($) {
+GameFramework = (function ($) {
   var inputStates = {};
 
   var eventListener = function (listenedKey, event, state) {

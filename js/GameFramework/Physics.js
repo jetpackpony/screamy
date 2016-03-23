@@ -1,4 +1,4 @@
-var GameFramework = (function ($) {
+GameFramework = (function ($) {
 
   $.getGravity = function () {
     return new $.Vector(0, -1);

@@ -1,10 +1,7 @@
-var GameFramework = (function ($) {
+GameFramework = (function ($) {
   var updateObjects;
   var gameState = 'beforeStart';
   var gravity;
-
-  $.Vector = Collisions.Vector;
-  $.Polygon = Collisions.Polygon;
 
   var mainLoop = function (time) {
     $._countFrameDelta(time);

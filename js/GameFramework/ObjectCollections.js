@@ -1,16 +1,16 @@
-var GameFramework = (function ($) {
+GameFramework = (function ($) {
   var collection;
 
   $.addObjects = function (objects) {
     objects.forEach(function(obj, i) {
-      collection[]
+      // collection[]
     });
   };
 
   $.pushObject = function (obj) {
 
   };
-  $.enemies.forEach
+  // $.enemies.forEach
 
   return $;
 }(GameFramework));

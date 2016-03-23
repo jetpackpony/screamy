@@ -1,4 +1,4 @@
-var GameFramework = (function ($) {
+GameFramework = (function ($) {
   var canvas, ctx, width, height;
 
   $._drawFrame = function (time) {

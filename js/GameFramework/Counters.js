@@ -1,4 +1,4 @@
-var GameFramework = (function ($) {
+GameFramework = (function ($) {
   var lastSecondFrameTime = 0;
   var fps = 0;
   var fpsCounter = 0;

@@ -1,0 +1,14 @@
+framework: jasmine2
+launch_in_dev:
+- Chrome
+src_files:
+- "js/GameFramework/Collisions.js"
+- "js/GameFramework/GameFramework.js"
+- "js/GameFramework/CanvasOperations.js"
+- "js/GameFramework/Counters.js"
+- "js/GameFramework/InputListeners.js"
+- "js/GameFramework/ObjectCollections.js"
+- "js/GameFramework/Physics.js"
+- "spec/**/*[sS]pec.js"
+
+

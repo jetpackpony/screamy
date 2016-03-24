@@ -4,11 +4,12 @@ GameFramework = (function ($) {
   var gravity;
 
   var mainLoop = function (time) {
-    $._countFrameDelta(time);
-    $._countFPS(time);
+    console.log("frame");
+    // $._countFrameDelta(time);
+    // $._countFPS(time);
 
     updateObjects(time);
-    $._drawFrame(time);
+    // $._drawFrame(time);
 
     if (gameState == 'playing') {
       requestAnimationFrame(mainLoop);
@@ -22,6 +23,7 @@ GameFramework = (function ($) {
   $.startGame = function () {
     gameState = 'playing';
     requestAnimationFrame(mainLoop);
+    console.log("start");
   };
 
   $.endGame = function () {

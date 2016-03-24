@@ -1,12 +1,12 @@
 describe("GameFramework >", function() {
   // Require the framework
-  require("../js/GameFramework/Collisions.js");
-  require("../js/GameFramework/GameFramework.js");
-  require("../js/GameFramework/CanvasOperations.js");
-  require("../js/GameFramework/Counters.js");
-  require("../js/GameFramework/InputListeners.js");
-  require("../js/GameFramework/ObjectCollections.js");
-  require("../js/GameFramework/Physics.js");
+  // require("../js/GameFramework/Collisions.js");
+  // require("../js/GameFramework/GameFramework.js");
+  // require("../js/GameFramework/CanvasOperations.js");
+  // require("../js/GameFramework/Counters.js");
+  // require("../js/GameFramework/InputListeners.js");
+  // require("../js/GameFramework/ObjectCollections.js");
+  // require("../js/GameFramework/Physics.js");
 
   describe("Collisions", function() {
     var Vector = GameFramework.Vector;
@@ -125,16 +125,30 @@ describe("GameFramework >", function() {
   });
 
   describe("Framework", function() {
-    xit("should call requestAnimationFrame on start", function() {
+    var foo = {
+        bar: function () {
+          return true;
+        }
+      }
+    
+    beforeEach(function () {
+      spyOn(foo, 'bar');
+      GameFramework.setUpdateObjectsFunction(foo.bar);
+      jasmine.clock().install();
+    });
+
+    afterEach(function () {
+      jasmine.clock().uninstall();
+    });
+
+    it("should call updateObjects function after start", function() {
+      // GameFramework.startGame();
+      // jasmine.clock().tick(1000);
+      // expect(foo.bar).toHaveBeenCalled();
       GameFramework.startGame();
-      expect()
     });
 
-    xit("should stop calling requestAnimationFrame in finish", function() {
-      expect()
-    });
-
-    xit("should call updateObjects function every frame", function() {
+    xit("should stop calling updateObjects function when finished", function() {
       expect()
     });
 

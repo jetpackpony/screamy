@@ -2,9 +2,9 @@ GameFramework = (function ($) {
   var updateObjects;
   var gameState = 'beforeStart';
   var gravity;
+  var reqFrame;
 
   var mainLoop = function (time) {
-    console.log("frame");
     // $._countFrameDelta(time);
     // $._countFPS(time);
 
@@ -12,7 +12,7 @@ GameFramework = (function ($) {
     // $._drawFrame(time);
 
     if (gameState == 'playing') {
-      requestAnimationFrame(mainLoop);
+      reqFrame = requestAnimationFrame(mainLoop);
     }
   };
 
@@ -22,13 +22,13 @@ GameFramework = (function ($) {
 
   $.startGame = function () {
     gameState = 'playing';
-    requestAnimationFrame(mainLoop);
-    console.log("start");
+    reqFrame = requestAnimationFrame(mainLoop);
   };
 
   $.endGame = function () {
     gameState = 'finished';
-  }
+    cancelAnimationFrame(reqFrame);
+  };
 
   return $;
 }(GameFramework));

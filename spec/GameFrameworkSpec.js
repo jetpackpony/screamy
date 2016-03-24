@@ -125,32 +125,30 @@ describe("GameFramework >", function() {
   });
 
   describe("Framework", function() {
-    var foo = {
-        bar: function () {
-          return true;
-        }
-      }
-    
-    beforeEach(function () {
-      spyOn(foo, 'bar');
-      GameFramework.setUpdateObjectsFunction(foo.bar);
-      jasmine.clock().install();
-    });
-
-    afterEach(function () {
-      jasmine.clock().uninstall();
-    });
-
-    it("should call updateObjects function after start", function() {
-      // GameFramework.startGame();
-      // jasmine.clock().tick(1000);
-      // expect(foo.bar).toHaveBeenCalled();
+    beforeEach(function() {
+      jasmine.RequestAnimationFrame.install();
+      updateCallback = jasmine.createSpy("updateCallback");
+      GameFramework.setUpdateObjectsFunction(updateCallback);
       GameFramework.startGame();
     });
 
-    xit("should stop calling updateObjects function when finished", function() {
-      expect()
+    afterEach(function() {
+      jasmine.RequestAnimationFrame.uninstall();
     });
 
-  })
+    it("should call updateObjects function after start", function() {
+      jasmine.RequestAnimationFrame.tick();
+      expect(updateCallback).toHaveBeenCalled();
+    });
+
+    it("should stop calling updateObjects function when finished", function() {
+      var count = updateCallback.calls.count();
+      jasmine.RequestAnimationFrame.tick();
+      GameFramework.endGame();
+      jasmine.RequestAnimationFrame.tick();
+      jasmine.RequestAnimationFrame.tick();
+      expect(updateCallback.calls.count()).toEqual(count);
+    });
+
+  });
 });

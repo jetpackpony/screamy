@@ -9,6 +9,6 @@ src_files:
 - "js/GameFramework/InputListeners.js"
 - "js/GameFramework/ObjectCollections.js"
 - "js/GameFramework/Physics.js"
-- "spec/**/*[sS]pec.js"
+- "spec/**/*.js"
 
 

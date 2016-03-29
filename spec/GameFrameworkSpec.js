@@ -125,30 +125,30 @@ describe("GameFramework >", function() {
   });
 
   describe("Framework", function() {
-    beforeEach(function() {
-      jasmine.RequestAnimationFrame.install();
-      updateCallback = jasmine.createSpy("updateCallback");
-      GameFramework.setUpdateObjectsFunction(updateCallback);
-      GameFramework.startGame();
-    });
+    describe("RAF callback tests", function() {
+      beforeAll(function() {
+        jasmine.RequestAnimationFrame.install();
+        updateCallback = jasmine.createSpy("updateCallback");
+        GameFramework.setUpdateObjectsFunction(updateCallback);
+        GameFramework.startGame();
+      });
 
-    afterEach(function() {
-      jasmine.RequestAnimationFrame.uninstall();
-    });
+      afterAll(function() {
+        jasmine.RequestAnimationFrame.uninstall();
+      });
 
-    it("should call updateObjects function after start", function() {
-      jasmine.RequestAnimationFrame.tick();
-      expect(updateCallback).toHaveBeenCalled();
-    });
+      it("should call updateObjects function after start", function() {
+        jasmine.RequestAnimationFrame.tick();
+        expect(updateCallback).toHaveBeenCalled();
+      });
 
-    it("should stop calling updateObjects function when finished", function() {
-      var count = updateCallback.calls.count();
-      jasmine.RequestAnimationFrame.tick();
-      GameFramework.endGame();
-      jasmine.RequestAnimationFrame.tick();
-      jasmine.RequestAnimationFrame.tick();
-      expect(updateCallback.calls.count()).toEqual(count);
+      it("should stop calling updateObjects function when finished", function() {
+        var count = updateCallback.calls.count();
+        GameFramework.endGame();
+        jasmine.RequestAnimationFrame.tick();
+        jasmine.RequestAnimationFrame.tick();
+        expect(updateCallback.calls.count()).toEqual(count);
+      });
     });
-
   });
 });

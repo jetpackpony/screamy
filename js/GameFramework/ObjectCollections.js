@@ -5,10 +5,12 @@ GameFramework = (function ($) {
     objects.forEach(function(obj, i) {
       // collection[]
     });
+    return $;
   };
 
   $.pushObject = function (obj) {
 
+    return $;
   };
   // $.enemies.forEach
 

@@ -15,6 +15,7 @@ GameFramework = (function ($) {
     enemies.forEach(function (enemy, index) {
       enemy.drawFrame();
     });
+    return $;
   };
 
   $.setCanvas = function (new_canvas) {
@@ -22,6 +23,7 @@ GameFramework = (function ($) {
     ctx = canvas.getContext('2d');
     width = canvas.width;
     height = canvas.height;
+    return $;
   };
 
   $.getCanvas = function () {

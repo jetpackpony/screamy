@@ -61,6 +61,7 @@ GameFramework = (function($) {
     for (var i = 0; i < this._relativePoints.length; i++) {
       this._calcPoints.push(this._center.add(this._relativePoints[i]));
     }
+    return this;
   };
 
   Polygon.prototype.getCenter = function() {

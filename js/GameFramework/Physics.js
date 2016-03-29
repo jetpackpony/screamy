@@ -6,7 +6,7 @@ GameFramework = (function ($) {
 
   $.setGravity = function (new_gravity) {
     aG = Math.round(height * settings.aG);
-
+    return $;
   };
 
   return $;

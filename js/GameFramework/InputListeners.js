@@ -19,6 +19,8 @@ GameFramework = (function ($) {
         eventListener(el, event, false);
       }, false);
     });
+
+    return $;
   };
 
   $.getInput = function (key) {

@@ -13,6 +13,8 @@ GameFramework = (function ($) {
       fpsCounter = 0;
     }
     fpsCounter++;
+
+    return $;
   };
 
   $._countFrameDelta = function (time) {
@@ -22,6 +24,8 @@ GameFramework = (function ($) {
     }
     frameDelta = time - prevFrameTime;
     prevFrameTime = time;
+
+    return $;
   };
 
   $.getFPS = function () {

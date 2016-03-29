@@ -18,16 +18,19 @@ GameFramework = (function ($) {
 
   $.setUpdateObjectsFunction = function (update_objects) {
     updateObjects = update_objects;
+    return $;
   };
 
   $.startGame = function () {
     gameState = 'playing';
     reqFrame = requestAnimationFrame(mainLoop);
+    return $;
   };
 
   $.endGame = function () {
     gameState = 'finished';
     cancelAnimationFrame(reqFrame);
+    return $;
   };
 
   return $;

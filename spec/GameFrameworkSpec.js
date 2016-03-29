@@ -151,4 +151,37 @@ describe("GameFramework >", function() {
       });
     });
   });
+
+  describe("Canvas Operations", function() {
+    var canvas, ctx;
+    var width = height = 100;
+
+    beforeAll(function() {
+      canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      ctx = canvas.getContext('2d');
+      GameFramework.setCanvas(canvas);
+    });
+
+    it("should store the canvas", function() {
+      expect(GameFramework.getCanvas()).toEqual(canvas);
+    });
+
+    it("should store the canvas's 2d context", function() {
+      expect(GameFramework.getCTX().getActualContext()).toEqual(ctx);
+    });
+
+    it("should return canvas dimentions", function() {
+      expect(GameFramework.getDimensions().width).toEqual(width);
+      expect(GameFramework.getDimensions().height).toEqual(height);
+    });
+
+    it("should record the canvas method calls", function() {
+      GameFramework.getCTX().test("testme");
+      var calls = GameFramework.getCTX().getCalls();
+      expect(calls[calls.length - 1].name).toEqual("test");
+      expect(calls[calls.length - 1].args.length).toEqual(1);
+    });
+  });
 });

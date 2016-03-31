@@ -184,4 +184,29 @@ describe("GameFramework >", function() {
       expect(calls[calls.length - 1].args.length).toEqual(1);
     });
   });
+
+  describe("Input Event Listeners", function () {
+
+    beforeAll(function() {
+      GameFramework.setInputListeners(['up', 'space']);
+      jasmine.triggerEvent(38, 'keydown');
+    });
+
+    afterAll(function() {
+      jasmine.triggerEvent(38, 'keyup');
+      jasmine.triggerEvent(32, 'keyup');
+    });
+
+    it("should detect when key is pressed", function() {
+      expect(GameFramework.getInput('up')).toEqual(true);
+      expect(GameFramework.getInput('space')).toEqual(false);
+    });
+
+    it("should not detect when key is not pressed", function() {
+      jasmine.triggerEvent(38, 'keyup');
+      jasmine.triggerEvent(32, 'keydown');
+      expect(GameFramework.getInput('up')).toEqual(false);
+      expect(GameFramework.getInput('space')).toEqual(true);
+    });
+  });
 });

@@ -12,6 +12,7 @@ GameFramework = (function ($) {
 
   $.setInputListeners = function (keys) {
     keys.forEach(function (el, i, arr) {
+      inputStates[el] = false;
       window.addEventListener('keydown', function (event) {
         eventListener(el, event, true);
       }, false);

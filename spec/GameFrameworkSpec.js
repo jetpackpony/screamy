@@ -206,7 +206,37 @@ describe("GameFramework >", function() {
       jasmine.triggerEvent(38, 'keyup');
       jasmine.triggerEvent(32, 'keydown');
       expect(GameFramework.getInput('up')).toEqual(false);
+      expect(GameFramework.getInput('down')).toBeFalsy();
       expect(GameFramework.getInput('space')).toEqual(true);
+    });
+  });
+
+  describe("Counters", function () {
+    beforeAll(function() {
+      jasmine.RequestAnimationFrame.install();
+      GameFramework.setUpdateObjectsFunction(function () {});
+      GameFramework.startGame();
+    });
+
+    afterAll(function() {
+      jasmine.RequestAnimationFrame.uninstall();
+    });
+
+    it("should count frames correctly", function() {
+      jasmine.RequestAnimationFrame.tick(1);
+      jasmine.RequestAnimationFrame.tick(300);
+      jasmine.RequestAnimationFrame.tick(500);
+      jasmine.RequestAnimationFrame.tick(600);
+      jasmine.RequestAnimationFrame.tick(1001);
+      expect(GameFramework.getFPS()).toEqual(5);
+    });
+
+    it("should calculate delta between frames correctly", function() {
+      jasmine.RequestAnimationFrame.tick(1);
+      jasmine.RequestAnimationFrame.tick(300);
+      expect(GameFramework.getFrameDelta()).toEqual(299);
+      jasmine.RequestAnimationFrame.tick(400);
+      expect(GameFramework.getFrameDelta()).toEqual(100);
     });
   });
 });

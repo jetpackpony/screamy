@@ -51,14 +51,14 @@
         /**
          * Simulate animation frame readiness.
          */
-        this.tick = function() {
+        this.tick = function(time) {
             var fns = callbacks, fn, i;
 
             callbacks = {};
 
             for (i in fns) {
                 fn = fns[i];
-                fn.call(global);
+                fn.call(global, time);
             }
         };
     }

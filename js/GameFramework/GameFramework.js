@@ -5,8 +5,8 @@ GameFramework = (function ($) {
   var reqFrame;
 
   var mainLoop = function (time) {
-    // $._countFrameDelta(time);
-    // $._countFPS(time);
+    $._countFrameDelta(time);
+    $._countFPS(time);
 
     updateObjects(time);
     // $._drawFrame(time);

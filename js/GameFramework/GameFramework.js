@@ -9,7 +9,7 @@ GameFramework = (function ($) {
     $._countFPS(time);
 
     updateObjects(time);
-    // $._drawFrame(time);
+    $._drawFrame(time);
 
     if (gameState == 'playing') {
       reqFrame = requestAnimationFrame(mainLoop);

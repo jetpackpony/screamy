@@ -22,6 +22,9 @@ GameFramework = (function ($) {
       stroke: function() {
         _ctx.stroke();
       },
+      clearRect: function(x, y, width, height) {
+        _ctx.clearRect(x, y, width, height);
+      },
       test: function() {
         // just for testing purposes
       }
@@ -56,15 +59,8 @@ GameFramework = (function ($) {
     // Draw the thing
     ctx.clearRect(0, 0, width, height);
 
-    // Draw the background
-    background.drawFrame();
-
-    // Draw the player
-    player.drawFrame();
-
-    // Draw the enemies
-    enemies.forEach(function (enemy, index) {
-      enemy.drawFrame();
+    $.getAllObjects().forEach(function (obj, index) {
+      obj.drawFrame();
     });
     return $;
   };

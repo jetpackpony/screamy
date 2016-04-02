@@ -8,6 +8,10 @@ describe("GameFramework >", function() {
   // require("../js/GameFramework/ObjectCollections.js");
   // require("../js/GameFramework/Physics.js");
 
+  beforeAll(function () {
+    GameFramework.setCanvas(document.createElement("canvas"));
+  });
+
   describe("Collisions", function() {
     var Vector = GameFramework.Vector;
     var Polygon = GameFramework.Polygon;
@@ -237,6 +241,35 @@ describe("GameFramework >", function() {
       expect(GameFramework.getFrameDelta()).toEqual(299);
       jasmine.RequestAnimationFrame.tick(400);
       expect(GameFramework.getFrameDelta()).toEqual(100);
+    });
+  });
+
+  describe("ObjectCollections", function () {
+    var player = { name: "Vasya" },
+        enemies = [{name: "Monster"}, {name: "Nikita"}],
+        takenName = { name: "taken name" },
+        objectsFlatted = [];
+
+    beforeAll(function() {
+      GameFramework.addObjects({
+        player: player,
+        enemies: enemies,
+        getObject: takenName
+      });
+      objectsFlatted.push(player, enemies[0], enemies[1], takenName);
+    });
+
+    it("should be able to store the object in the framework", function() {
+      expect(GameFramework.player).toEqual(player);
+      expect(GameFramework.enemies).toEqual(enemies);
+    });
+
+    it("should be able to store objects with names already taken", function() {
+      expect(GameFramework.getObject("getObject")).toEqual(takenName);
+    });
+
+    it("should return a flatted collection of all objects", function() {
+      expect(GameFramework.getAllObjects()).toEqual(objectsFlatted);
     });
   });
 });

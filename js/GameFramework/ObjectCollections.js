@@ -1,18 +1,37 @@
 GameFramework = (function ($) {
-  var collection;
+  var collection = {};
 
   $.addObjects = function (objects) {
-    objects.forEach(function(obj, i) {
-      // collection[]
-    });
+    for (var key in objects) {
+      if (!objects.hasOwnProperty(key)) continue;
+
+      collection[key] = objects[key];
+      if (!$.hasOwnProperty(key)) {
+        $[key] = collection[key];
+      }
+    }
     return $;
   };
 
-  $.pushObject = function (obj) {
-
-    return $;
+  $.getObject = function (name) {
+    return collection[name];
   };
-  // $.enemies.forEach
+
+  $.getAllObjects = function () {
+    var result = [];
+    for (var key in collection) {
+      if (!collection.hasOwnProperty(key)) continue;
+
+      if (Array.isArray(collection[key])) {
+        collection[key].forEach(function(obj, index) {
+          result.push(obj);
+        });
+      } else {
+        result.push(collection[key]);
+      }
+    }
+    return result;
+  };
 
   return $;
 }(GameFramework));

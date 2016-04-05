@@ -1,12 +1,4 @@
 describe("GameFramework >", function() {
-  // Require the framework
-  // require("../js/GameFramework/Collisions.js");
-  // require("../js/GameFramework/GameFramework.js");
-  // require("../js/GameFramework/CanvasOperations.js");
-  // require("../js/GameFramework/Counters.js");
-  // require("../js/GameFramework/InputListeners.js");
-  // require("../js/GameFramework/ObjectCollections.js");
-  // require("../js/GameFramework/Physics.js");
 
   beforeAll(function () {
     GameFramework.setCanvas(document.createElement("canvas"));
@@ -220,6 +212,7 @@ describe("GameFramework >", function() {
       jasmine.RequestAnimationFrame.install();
       GameFramework.setUpdateObjectsFunction(function () {});
       GameFramework.startGame();
+      jasmine.RequestAnimationFrame.tick(0);
     });
 
     afterAll(function() {
@@ -227,19 +220,17 @@ describe("GameFramework >", function() {
     });
 
     it("should count frames correctly", function() {
-      jasmine.RequestAnimationFrame.tick(1);
       jasmine.RequestAnimationFrame.tick(300);
-      jasmine.RequestAnimationFrame.tick(500);
-      jasmine.RequestAnimationFrame.tick(600);
-      jasmine.RequestAnimationFrame.tick(1001);
+      jasmine.RequestAnimationFrame.tick(200);
+      jasmine.RequestAnimationFrame.tick(100);
+      jasmine.RequestAnimationFrame.tick(400);
       expect(GameFramework.getFPS()).toEqual(5);
     });
 
     it("should calculate delta between frames correctly", function() {
-      jasmine.RequestAnimationFrame.tick(1);
       jasmine.RequestAnimationFrame.tick(300);
-      expect(GameFramework.getFrameDelta()).toEqual(299);
-      jasmine.RequestAnimationFrame.tick(400);
+      expect(GameFramework.getFrameDelta()).toEqual(300);
+      jasmine.RequestAnimationFrame.tick(100);
       expect(GameFramework.getFrameDelta()).toEqual(100);
     });
   });
@@ -257,6 +248,10 @@ describe("GameFramework >", function() {
         getObject: takenName
       });
       objectsFlatted.push(player, enemies[0], enemies[1], takenName);
+    });
+
+    afterAll(function () {
+      GameFramework._removeAllObjects();
     });
 
     it("should be able to store the object in the framework", function() {

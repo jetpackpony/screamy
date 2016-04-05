@@ -9,7 +9,8 @@
 
     function MockRAF(global) {
         var realRAF = global.requestAnimationFrame,
-            realCAF = global.cancelAnimationFrame;
+            realCAF = global.cancelAnimationFrame,
+            timeSinceStart = 0;
 
         /**
          * Mock for window.requestAnimationFrame
@@ -38,6 +39,7 @@
         this.install = function() {
             global.requestAnimationFrame = mockRAF;
             global.cancelAnimationFrame = mockCAF;
+            timeSinceStart = 0;
         };
 
         /**
@@ -46,6 +48,8 @@
         this.uninstall = function() {
             global.requestAnimationFrame = realRAF;
             global.cancelAnimationFrame = realCAF;
+            timeSinceStart = 0;
+            callbacks = {};
         };
 
         /**
@@ -54,11 +58,12 @@
         this.tick = function(time) {
             var fns = callbacks, fn, i;
 
+            timeSinceStart += time;
             callbacks = {};
 
             for (i in fns) {
                 fn = fns[i];
-                fn.call(global, time);
+                fn.call(global, timeSinceStart);
             }
         };
     }

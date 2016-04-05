@@ -58,7 +58,7 @@
         this.tick = function(time) {
             var fns = callbacks, fn, i;
 
-            timeSinceStart += time;
+            timeSinceStart += time || 0;
             callbacks = {};
 
             for (i in fns) {

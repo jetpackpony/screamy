@@ -7,7 +7,7 @@ GameFramework = (function ($) {
   var firstFrame = true;
 
   $._countFPS = function (time) {
-    if (time - lastSecondFrameTime > 1000) {
+    if (time - lastSecondFrameTime >= 1000) {
       lastSecondFrameTime = time;
       fps = fpsCounter;
       fpsCounter = 0;

@@ -30,7 +30,9 @@ GameFramework = (function($) {
     return this.dotProduct(this);
   };
 
-
+  Vector.prototype.multiplyBy = function(magnitude) {
+    return new Vector(this.x * magnitude, this.y * magnitude);
+  };
 
   function Projection(x1, x2, axis) {
     this.x1 = x1 || 0;

@@ -9,6 +9,8 @@ GameFramework = (function ($) {
     $._countFPS(time);
 
     updateObjects(time);
+    $._updateObjectsState();
+
     $._drawFrame(time);
 
     if (gameState == 'playing') {

@@ -33,5 +33,25 @@ GameFramework = (function ($) {
     return result;
   };
 
+  /**
+   * Iterates over the objects collection and calls each object's updateState function
+   * @return {GameFramework} Returns the current instance of GameFramework
+   */
+  $._updateObjectsState = function () {
+    $.getAllObjects().forEach(function (obj, i) {
+      obj.updateState();
+    });
+    return $;
+  };
+
+  /**
+   * This clears the collection, for testing purposes only
+   * @return {GameFramework} Returns the current instance of GameFramework
+   */
+  $._removeAllObjects = function () {
+    collection = {};
+    return $;
+  };
+
   return $;
 }(GameFramework));

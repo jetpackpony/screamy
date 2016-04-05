@@ -60,7 +60,7 @@ GameFramework = (function ($) {
     ctx.clearRect(0, 0, width, height);
 
     $.getAllObjects().forEach(function (obj, index) {
-      obj.drawFrame();
+      obj.draw();
     });
     return $;
   };

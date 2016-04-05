@@ -272,4 +272,114 @@ describe("GameFramework >", function() {
       expect(GameFramework.getAllObjects()).toEqual(objectsFlatted);
     });
   });
+
+  describe("DrawableObject >", function() {
+    describe("Speed and acceleration >", function() {
+      var obj;
+      var Vector = GameFramework.Vector;
+
+      beforeAll(function() {
+        jasmine.RequestAnimationFrame.install();
+        GameFramework.setUpdateObjectsFunction(function (time) { });
+        GameFramework.startGame();
+        jasmine.RequestAnimationFrame.tick(0);
+      });
+
+      afterAll(function() {
+        jasmine.RequestAnimationFrame.uninstall();
+      });
+
+      beforeEach(function() {
+        obj = new GameFramework.DrawableObject();
+        GameFramework.addObjects({ obj: obj });
+      });
+
+      afterEach(function() {
+        GameFramework._removeAllObjects();
+      });
+
+
+      it("should not change coordinates if the speed is zero", function() {
+        obj.setSpeed(new Vector(0, 0));
+        jasmine.RequestAnimationFrame.tick(1000);
+        expect(obj.position).toEqual(new Vector(0, 0));
+      });
+
+      it("should change coordinates if the speed is non-zero", function() {
+        obj.setSpeed(new Vector(1, 2));
+        jasmine.RequestAnimationFrame.tick(1000);
+        expect(obj.position).toEqual(new Vector(1, 2));
+        jasmine.RequestAnimationFrame.tick(5000);
+        expect(obj.position).toEqual(new Vector(6, 12));
+      });
+
+      it("should not change speed if acceleration is zero", function() {
+        obj.setSpeed(new Vector(0, 0));
+        obj.setAcceleration(new Vector(0, 0));
+        jasmine.RequestAnimationFrame.tick(1000);
+        expect(obj.speed).toEqual(new Vector(0, 0));
+      });
+
+      it("should change speed if acceleration is non-zero", function() {
+        obj.setSpeed(new Vector(0, 0));
+        obj.setAcceleration(new GameFramework.Vector(1, 2));
+        jasmine.RequestAnimationFrame.tick(1000);
+        expect(obj.speed).toEqual(new GameFramework.Vector(1, 2));
+        jasmine.RequestAnimationFrame.tick(1000);
+        expect(obj.speed).toEqual(new GameFramework.Vector(2, 4));
+      });
+    });
+
+    describe("Drawing >", function() {
+      var obj, image;
+      var img = "";
+      var objPos = {x: 0, y: 0, w: 100, h: 100};
+      var spritePos = {x: 0, y: 0, w: 100, h: 100};
+
+      beforeAll(function() {
+        image = new Image();
+        image.src = img;
+        obj = new GameFramework.DrawableObject();
+        obj.spriteCollection = new GameFramework.SpriteCollection();
+        GameFramework.addObjects({ obj: obj });
+
+        jasmine.RequestAnimationFrame.install();
+        GameFramework.setUpdateObjectsFunction(function (time) { });
+        GameFramework.startGame();
+        jasmine.RequestAnimationFrame.tick(0);
+      });
+
+      afterAll(function() {
+        jasmine.RequestAnimationFrame.uninstall();
+        GameFramework._removeAllObjects();
+      });
+
+      xit("should call the draw method of canvas every frame", function() {
+        jasmine.RequestAnimationFrame.tick(1000);
+
+        var calls = GameFramework.getCTX().getCalls();
+        expect(calls[calls.length - 1].name).toEqual("drawImage");
+        expect(calls[calls.length - 1].args.length).toEqual(9);
+        expect(calls[calls.length - 1].args[0]).toEqual(image);
+        expect(calls[calls.length - 1].args[1]).toEqual(objPos.x);
+        expect(calls[calls.length - 1].args[2]).toEqual(objPos.y);
+        expect(calls[calls.length - 1].args[3]).toEqual(objPos.w);
+        expect(calls[calls.length - 1].args[4]).toEqual(objPos.h);
+        expect(calls[calls.length - 1].args[5]).toEqual(spritePos.x);
+        expect(calls[calls.length - 1].args[6]).toEqual(spritePos.y);
+        expect(calls[calls.length - 1].args[7]).toEqual(spritePos.w);
+        expect(calls[calls.length - 1].args[8]).toEqual(spritePos.h);
+      });
+    });
+
+    describe("Collisions >", function() {
+      xit("should detect collision if colliding with object", function() {
+        expect()
+      });
+
+      xit("should not detect collision if not colliding with object", function() {
+        expect()
+      });
+    });
+  });
 });

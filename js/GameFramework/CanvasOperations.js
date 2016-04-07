@@ -25,6 +25,9 @@ GameFramework = (function ($) {
       clearRect: function(x, y, width, height) {
         _ctx.clearRect(x, y, width, height);
       },
+      drawImage: function(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight) {
+        _ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+      },
       test: function() {
         // just for testing purposes
       }

@@ -268,7 +268,7 @@ describe("GameFramework >", function() {
     });
   });
 
-  describe("DrawableObject >", function() {
+  describe("DrawableObject >", function () {
     describe("Speed and acceleration >", function() {
       var obj;
       var Vector = GameFramework.Vector;
@@ -335,7 +335,7 @@ describe("GameFramework >", function() {
         image = new Image();
         image.src = img;
         obj = new GameFramework.DrawableObject();
-        obj.spriteCollection = new GameFramework.SpriteCollection();
+        obj.setSprite(new GameFramework.Sprite());
         GameFramework.addObjects({ obj: obj });
 
         jasmine.RequestAnimationFrame.install();
@@ -376,5 +376,72 @@ describe("GameFramework >", function() {
         expect()
       });
     });
+  });
+
+  describe("Sprite >", function () {
+      var obj, image, sprite, position1, position2, spritePos1, spritePos2;
+      var img = "";
+      var frameBounds1 = {x: 0, y: 0, w: 100, h: 100};
+      var frameBounds2 = {x: 100, y: 0, w: 100, h: 100};
+      var pos1 = { x: 100, y: 100 };
+      var pos2 = { x: 200, y: 200 };
+
+      beforeEach(function() {
+        jasmine.PerformanceNow.install();
+        position1 = new GameFramework.Vector(pos1.x, pos1.y);
+        spritePos1 = {x: pos1.x, y: pos1.y, w: frameBounds1.w, h: frameBounds1.h};
+        position2 = new GameFramework.Vector(pos2.x, pos2.y);
+        spritePos2 = {x: pos2.x, y: pos2.y, w: frameBounds2.w, h: frameBounds2.h};
+        image = new Image();
+        image.src = img;
+        sprite = new GameFramework.Sprite();
+        sprite.setImage(image);
+        sprite.addFrames([
+          { x: frameBounds1.x, y: frameBounds1.y, h: frameBounds1.h, w: frameBounds1.w },
+          { x: frameBounds2.x, y: frameBounds2.y, h: frameBounds2.h, w: frameBounds2.w }
+        ]);
+        sprite.setFrameDelay(100);
+      });
+
+      afterEach(function() {
+        jasmine.PerformanceNow.uninstall();
+      });
+
+      it("should call the draw method with the right arguments", function() {
+        sprite.drawAt(position1);
+        var calls = GameFramework.getCTX().getCalls();
+        expect(calls[calls.length - 1].name).toEqual("drawImage");
+        expect(calls[calls.length - 1].args.length).toEqual(9);
+        expect(calls[calls.length - 1].args[0]).toEqual(image);
+        expect(calls[calls.length - 1].args[1]).toEqual(frameBounds1.x);
+        expect(calls[calls.length - 1].args[2]).toEqual(frameBounds1.y);
+        expect(calls[calls.length - 1].args[3]).toEqual(frameBounds1.w);
+        expect(calls[calls.length - 1].args[4]).toEqual(frameBounds1.h);
+        expect(calls[calls.length - 1].args[5]).toEqual(spritePos1.x);
+        expect(calls[calls.length - 1].args[6]).toEqual(spritePos1.y);
+        expect(calls[calls.length - 1].args[7]).toEqual(spritePos1.w);
+        expect(calls[calls.length - 1].args[8]).toEqual(spritePos1.h);
+      });
+
+      it("should call the draw method for the correct sprite frame", function() {
+        jasmine.PerformanceNow.tick(110);
+        sprite.drawAt(position2);
+        var calls = GameFramework.getCTX().getCalls();
+        expect(calls[calls.length - 1].name).toEqual("drawImage");
+        expect(calls[calls.length - 1].args.length).toEqual(9);
+        expect(calls[calls.length - 1].args[0]).toEqual(image);
+        expect(calls[calls.length - 1].args[1]).toEqual(frameBounds2.x);
+        expect(calls[calls.length - 1].args[2]).toEqual(frameBounds2.y);
+        expect(calls[calls.length - 1].args[3]).toEqual(frameBounds2.w);
+        expect(calls[calls.length - 1].args[4]).toEqual(frameBounds2.h);
+        expect(calls[calls.length - 1].args[5]).toEqual(spritePos2.x);
+        expect(calls[calls.length - 1].args[6]).toEqual(spritePos2.y);
+        expect(calls[calls.length - 1].args[7]).toEqual(spritePos2.w);
+        expect(calls[calls.length - 1].args[8]).toEqual(spritePos2.h);
+      });
+
+      xit("should skip frames if there was a pause between calls", function() {
+        expect()
+      });
   });
 });

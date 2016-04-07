@@ -4,13 +4,13 @@ GameFramework = (function ($) {
     this.position = new $.Vector(0, 0);
     this.acceleration = new $.Vector(0, 0);
     this.speed = new $.Vector(0, 0);
-    this.spriteCollection = new SpriteCollection();
+    this.sprite = new $.Sprite();
     this.exists = true;
   }
   $.DrawableObject = DrawableObject;
 
   DrawableObject.prototype.draw = function() {
-    
+    this.sprite.drawAt(this.position);
   };
 
   DrawableObject.prototype.setSpeed = function(new_vector) {
@@ -23,6 +23,10 @@ GameFramework = (function ($) {
 
   DrawableObject.prototype.setPosition = function() {
     
+  };
+
+  DrawableObject.prototype.setSprite = function(new_sprite) {
+    this.sprite = new_sprite;
   };
 
   DrawableObject.prototype.isCollidingWith = function() {
@@ -42,10 +46,6 @@ GameFramework = (function ($) {
     this.speed = this.speed.add(this.acceleration.multiplyBy(delta));
     this.position = this.position.add(this.speed.multiplyBy(delta));
   };
-
-  function SpriteCollection() {
-
-  }
 
   return $;
 }(GameFramework));

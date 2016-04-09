@@ -22,7 +22,8 @@ GameFramework = (function ($) {
    * @return {int}          The ID of a next frame to show
    */
   var getNextFrameId = function(delta, delay, currrent, size) {
-    var getNext = function(delta, delay, currrent) {
+
+    var getNext = function() {
       return Math.floor(delta / delay) + currrent;
     };
     if (getNext() > size)
@@ -46,37 +47,44 @@ GameFramework = (function ($) {
   /**
    * Draws a SpriteFrame on the framework's canvas
    * @param  {Vector} position The position to draw the frame at
-   * @return {void}
+   * @return {Sprite} this
    */
   Sprite.prototype.drawAt = function(position) {
     this._getCurrentFrame().drawAt(position);
+    return this;
   };
 
   /**
    * Setter for the spritesheet's image object
    * @param {Image} new_image The spritesheet's image object
+   * @return {Sprite} this
    */
   Sprite.prototype.setImage = function(new_image) {
     this._image = new_image;
+    return this;
   };
 
   /**
    * Adds frames' info to the spritesheet
    * @param {Array} more_frames An array of objects of format { x: x, y: y, w: w, h: h }
+   * @return {Sprite} this
    */
   Sprite.prototype.addFrames = function(more_frames) {
     var that = this;
     more_frames.forEach(function(obj, index) {
       that._frames.push((new SpriteFrame()).setCollection(that).setDimentions(obj));
-    })
+    });
+    return this;
   };
 
   /**
    * Setter for minimum delay between 2 frames
    * @param {int} new_delay The minimum delay between 2 frames
+   * @return {Sprite} this
    */
   Sprite.prototype.setFrameDelay = function(new_delay) {
     this._frameDelay = new_delay;
+    return this;
   };
 
   /**
@@ -87,6 +95,13 @@ GameFramework = (function ($) {
     return this._image;
   };
 
+  /**
+   * Returns the polygon of the current frame
+   * @return {Polygon} the polygon of the current frame
+   */
+  Sprite.prototype.getCurrentPolygon = function() {
+    return this._getCurrentFrame().getPolygon();
+  };
 
   /**
    * SpriteFrame represents a single image on a spritesheet
@@ -104,6 +119,7 @@ GameFramework = (function ($) {
   /**
    * Stores the reference to parent Sprite collection
    * @param {Sprite} coll parent Sprite collections
+   * @return {SpriteFrame} this
    */
   SpriteFrame.prototype.setCollection = function(coll) {
     this._collection = coll;
@@ -113,20 +129,21 @@ GameFramework = (function ($) {
   /**
    * Sets the dimentions of the sprite frame
    * @param {Object} new_dimentions the object of format { x: x, y: y, w: w, h: h }
+   * @return {SpriteFrame} this
    */
   SpriteFrame.prototype.setDimentions = function(new_dimentions) {
     var x = this._x = new_dimentions.x;
     var y = this._y = new_dimentions.y;
     var w = this._w = new_dimentions.w;
     var h = this._h = new_dimentions.h;
-    this._polygon = new $.Polygon.CreateNewFromPoints([[x, y], [x + w, y], [x, y + h], [x+w, y+h]]);
+    this._polygon = new $.Polygon.CreateNewFromPoints([[0, 0], [w, 0], [0, h], [w, h]]);
     return this;
   };
 
   /**
    * Draws the sprite frame on a framework's canvas
    * @param  {Vector} position the position at which to draw the image
-   * @return {void}
+   * @return {SpriteFrame} this
    */
   SpriteFrame.prototype.drawAt = function(position) {
     $.getCTX().drawImage(
@@ -140,6 +157,15 @@ GameFramework = (function ($) {
       this._w,
       this._h
     );
+    return this;
+  };
+
+  /**
+   * Returns the polygon of the SpriteFrame
+   * @return {Polygon} the polygon of the SpriteFrame
+   */
+  SpriteFrame.prototype.getPolygon = function() {
+    return this._polygon;
   };
 
   return $;

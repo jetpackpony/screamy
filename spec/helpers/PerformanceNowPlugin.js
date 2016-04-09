@@ -7,7 +7,7 @@
         callbacks = {};
 
     function MockPerfNow(global) {
-        var realPerfNow = global.performance.now(),
+        var realPerfNow = global.performance.now,
             setTime = 0;
 
         /**

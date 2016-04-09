@@ -1,5 +1,5 @@
 GameFramework = (function ($) {
-  var updateObjects;
+  var updateObjects = function () {};
   var gameState = 'beforeStart';
   var gravity;
   var reqFrame;

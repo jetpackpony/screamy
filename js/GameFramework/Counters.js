@@ -28,6 +28,15 @@ GameFramework = (function ($) {
     return $;
   };
 
+  $._resetCounters = function () {
+    lastSecondFrameTime = 0;
+    fps = 0;
+    fpsCounter = 0;
+    frameDelta = 0;
+    prevFrameTime = 0;
+    firstFrame = true;
+  };
+
   $.getFPS = function () {
     return fps;
   };

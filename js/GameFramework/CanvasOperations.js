@@ -58,8 +58,13 @@ GameFramework = (function ($) {
     }
   };
 
+  /**
+   * Draws all existing objects on a canvas
+   * @param  {float} time     time passed by requestAnimationFrame
+   * @return {GameFramework}  the current instance of the framework
+   */ 
   $._drawFrame = function (time) {
-    // Draw the thing
+    // Clear the canvas
     ctx.clearRect(0, 0, width, height);
 
     $.getAllObjects().forEach(function (obj, index) {
@@ -68,6 +73,11 @@ GameFramework = (function ($) {
     return $;
   };
 
+  /**
+   * Inits the canvas and installs canvas proxy
+   * @param {Canvas} new_canvas the canvas html element
+   * @return {GameFramework}  the current instance of the framework
+   */
   $.setCanvas = function (new_canvas) {
     canvas = new_canvas;
     ctx = new CanvasProxy(canvas.getContext('2d'));
@@ -76,14 +86,26 @@ GameFramework = (function ($) {
     return $;
   };
 
+  /**
+   * Returns the canvas html element
+   * @return {Canvas} the canvas html element
+   */
   $.getCanvas = function () {
     return canvas;
   };
 
+  /**
+   * Returns the canvas's context
+   * @return {Context} The context of the canvas
+   */
   $.getCTX = function () {
     return ctx;
   };
 
+  /**
+   * Returns the width and height of the canvas element
+   * @return {Object} an object of format { height: height, width: width }
+   */
   $.getDimensions = function () {
     return {
       height: height,

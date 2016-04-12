@@ -113,7 +113,18 @@ describe("GameFramework >", function() {
 
         it("should not detect collision with not overlapping polygon", function() {
           expect(p1.isCollidingWith(p4)).toBeFalsy();
-        });      
+        });
+
+        it("should be able to move the center of polygon not affecting the polygon", function() {
+          p1.setCenter(new Vector(0, 0));
+          p2.setCenter(new Vector(2, 0));
+          p3.setCenter(new Vector(3, 0));
+          p4.setCenter(new Vector(8, 0));
+          expect(p2.isCollidingWith(p3)).toBeTruthy();
+          expect(p1.isCollidingWith(p2)).toBeTruthy();
+          expect(p1.isCollidingWith(p3)).toBeFalsy();
+          expect(p1.isCollidingWith(p4)).toBeFalsy();
+        });
       });
 
       describe("Polygon creation:", function() {
@@ -230,13 +241,19 @@ describe("GameFramework >", function() {
   });
 
   describe("ObjectCollections", function () {
-    var player = { name: "Vasya" },
-        enemies = [{name: "Monster"}, {name: "Nikita"}],
-        takenName = { name: "taken name" },
-        objectsFlatted = [];
-    objectsFlatted.push(player, enemies[0], enemies[1], takenName);
+    var player, enemies, takenName, objectsFlatted, objectsFlatted_Destroyed;
 
     beforeEach(function() {
+      player = new GameFramework.DrawableObject();
+      enemies = [new GameFramework.DrawableObject(), new GameFramework.DrawableObject()];
+      takenName = new GameFramework.DrawableObject();
+      // player = { name: "Vasya", isAlive: isAlive };
+      // enemies = [{name: "Monster", isAlive: isAlive}, {name: "Nikita", isAlive: isAlive}];
+      // takenName = { name: "taken name", isAlive: isAlive };
+      objectsFlatted = [];
+      objectsFlatted_Destroyed = [];
+      objectsFlatted.push(player, enemies[0], enemies[1], takenName);
+      objectsFlatted_Destroyed.push(enemies[0], takenName);
       GameFramework.addObjects({
         player: player,
         enemies: enemies,
@@ -256,10 +273,22 @@ describe("GameFramework >", function() {
     it("should return a flatted collection of all objects", function() {
       expect(GameFramework.getAllObjects()).toEqual(objectsFlatted);
     });
+
+    it("should remove destroyed objects from the collection", function() {
+      enemies[1].destroy();
+      player.destroy();
+      expect(GameFramework.getAllObjects()).toEqual(objectsFlatted_Destroyed);
+      expect(GameFramework.getObject("player")).toEqual(undefined);
+    });
+
+    it("should remove destroyed objects from GameFramework object", function() {
+      player.destroy();
+      expect(GameFramework.player).toEqual(undefined);
+    });
   });
 
   describe("Sprite >", function () {
-    var obj, image, sprite, position1, position2, spritePos1, spritePos2;
+    var obj, image, sprite, position1, position2, spritePos1, spritePos2, pol1, pol2;
     var img = "";
     var frameBounds1 = {x: 0, y: 0, w: 100, h: 100};
     var frameBounds2 = {x: 100, y: 0, w: 100, h: 100};
@@ -272,6 +301,8 @@ describe("GameFramework >", function() {
       spritePos1 = {x: pos1.x, y: pos1.y, w: frameBounds1.w, h: frameBounds1.h};
       position2 = new GameFramework.Vector(pos2.x, pos2.y);
       spritePos2 = {x: pos2.x, y: pos2.y, w: frameBounds2.w, h: frameBounds2.h};
+      pol1 = new GameFramework.Polygon.CreateNewFromPoints([0, 0], [frameBounds1.w, 0], [0, frameBounds1.h], [frameBounds1.w, frameBounds1.h]);
+      pol2 = new GameFramework.Polygon.CreateNewFromPoints([0, 0], [frameBounds2.w, 0], [0, frameBounds2.h], [frameBounds2.w, frameBounds2.h]);
       image = new Image();
       image.src = img;
       sprite = 
@@ -327,6 +358,15 @@ describe("GameFramework >", function() {
           spritePos2.x, spritePos2.y, spritePos2.w, spritePos2.h,
         ]
       });
+    });
+
+    it("should return the correct polygon for the frame", function() {
+      expect(sprite.getCurrentPolygon()).toEqual(pol1);
+    });
+
+    it("should return the correct polygon for the frame if there is a delay between frames", function() {
+      jasmine.PerformanceNow.tick(510);
+      expect(sprite.getCurrentPolygon()).toEqual(pol2);
     });
   });
 
@@ -411,7 +451,15 @@ describe("GameFramework >", function() {
       beforeEach(function() {
         image = new Image();
         image.src = img;
-        sprite = 
+        sprite1 = 
+          (new GameFramework.Sprite())
+          .setImage(image)
+          .addFrames([
+            { x: frameBounds.x, y: frameBounds.y, h: frameBounds.h, w: frameBounds.w }
+          ])
+          .setFrameDelay(100);
+
+        sprite2 = 
           (new GameFramework.Sprite())
           .setImage(image)
           .addFrames([
@@ -421,12 +469,12 @@ describe("GameFramework >", function() {
 
         obj1 = 
           (new GameFramework.DrawableObject())
-          .setSprite(sprite)
+          .setSprite(sprite1)
           .setPosition(objPos1);
 
         obj2 = 
           (new GameFramework.DrawableObject())
-          .setSprite(sprite)
+          .setSprite(sprite2)
           .setPosition(objPos2);
 
         GameFramework
@@ -449,6 +497,12 @@ describe("GameFramework >", function() {
       it("should not detect collision if not colliding with object", function() {
         GameFramework.obj2.setPosition(new GameFramework.Vector(300, 300));
         expect(GameFramework.obj1.isCollidingWith(GameFramework.obj2)).toBeFalsy();
+      });
+
+      it("should be nulled when destroyed", function() {
+        obj1.destroy();
+        expect(obj1.isAlive()).toBeFalsy();
+        expect(obj1.sprite).toEqual(undefined);
       });
     });
   });

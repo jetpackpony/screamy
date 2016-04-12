@@ -9,6 +9,13 @@ GameFramework = (function ($) {
     for (var key in objects) {
       if (!objects.hasOwnProperty(key)) continue;
 
+      if (Array.isArray(objects[key])) {
+        objects[key].forEach(function(obj, index) {
+          obj._setName(key + "_" + index);
+        });
+      } else {
+        objects[key]._setName(key);
+      }
       collection[key] = objects[key];
       if (!$.hasOwnProperty(key)) {
         $[key] = collection[key];
@@ -63,6 +70,28 @@ GameFramework = (function ($) {
    */
   $._removeAllObjects = function () {
     collection = {};
+    return $;
+  };
+
+  /**
+   * Removes all destroyed objects from the collection
+   * @return {GameFramework} Returns the current instance of GameFramework
+   */
+  $._clearDestroyedObjects = function () {
+    for (var key in collection) {
+      if (!collection.hasOwnProperty(key)) continue;
+
+      if (Array.isArray(collection[key])) {
+        collection[key] = collection[key].filter(function (obj) {
+          return obj.isAlive();
+        });
+      } else {
+        if (!collection[key].isAlive()) {
+          delete collection[key];
+          delete $[key];
+        }
+      }
+    }
     return $;
   };
 

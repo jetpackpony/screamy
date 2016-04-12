@@ -60,9 +60,11 @@ GameFramework = (function($) {
 
   Polygon.prototype.setCenter = function(new_center) {
     this._center = new_center;
-    for (var i = 0; i < this._relativePoints.length; i++) {
-      this._calcPoints.push(this._center.add(this._relativePoints[i]));
-    }
+    this._calcPoints = [];
+    var that = this;
+    this._relativePoints.forEach(function (point, i) {
+      that._calcPoints.push(that._center.add(point));
+    });
     return this;
   };
 

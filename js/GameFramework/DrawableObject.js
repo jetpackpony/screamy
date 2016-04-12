@@ -4,13 +4,33 @@ GameFramework = (function ($) {
    * Class representing a game object which can be drawn on a canvas
    */
   function DrawableObject () {
+    this._init();
+  }
+  $.DrawableObject = DrawableObject;
+
+  /**
+   * Initializes the object
+   * @return {DrawableObject} this 
+   */
+  DrawableObject.prototype._init = function() {
     this.position = new $.Vector(0, 0);
     this.acceleration = new $.Vector(0, 0);
     this.speed = new $.Vector(0, 0);
     this.sprite = undefined;
     this.exists = true;
-  }
-  $.DrawableObject = DrawableObject;
+    this.name = "";
+    return this;
+  };
+
+  /**
+   * Records the name of the object. Used by GF to store the object's name in the collection
+   * @param {String} new_name the name of the object
+   * @return {DrawableObject} this
+   */
+  DrawableObject.prototype._setName = function(new_name) {
+    this.name = new_name;
+    return this;
+  };
 
   /**
    * Draws the currect state of the object at the current position
@@ -78,8 +98,22 @@ GameFramework = (function ($) {
     return this.sprite.getCurrentPolygon().setCenter(this.position);
   };
 
+  /**
+   * Nulls the object and sets it up for removal from the collections
+   * @return {void}
+   */
   DrawableObject.prototype.destroy = function() {
-    
+    this._init();
+    this.exists = false;
+    $._clearDestroyedObjects();
+  };
+
+  /** 
+   * Returns true if the object is not destroyed
+   * @return {Boolean} true if the object is not destroyed
+   */
+  DrawableObject.prototype.isAlive = function() {
+    return this.exists;
   };
 
   /**

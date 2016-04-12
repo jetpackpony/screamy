@@ -136,7 +136,7 @@ GameFramework = (function ($) {
     var y = this._y = new_dimentions.y;
     var w = this._w = new_dimentions.w;
     var h = this._h = new_dimentions.h;
-    this._polygon = new $.Polygon.CreateNewFromPoints([[0, 0], [w, 0], [0, h], [w, h]]);
+    this._polygon = new $.Polygon.CreateNewFromPoints([0, 0], [w, 0], [0, h], [w, h]);
     return this;
   };
 

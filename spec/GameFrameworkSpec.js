@@ -507,4 +507,16 @@ describe("GameFramework >", function() {
     });
   });
 
+  describe("Physics > ", function () {
+    var aG = 0.75,
+        vector = new GameFramework.Vector(0, height * aG);
+    beforeEach(function () {
+      GameFramework.setGravity(aG);
+    });
+
+    it("should return the gravity vector", function() {
+      expect(GameFramework.getGravity()).toEqual(vector);
+    });
+  });
+
 });

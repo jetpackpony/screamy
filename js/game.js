@@ -43,10 +43,11 @@ window.onload = function init() {
   GF.setCanvas(document.querySelector("#screamy"));
   GF.setUpdateObjectsFunction(updateObjects);
   GF.setInputListeners(['up','space']);
+  GF.setGravity(settings.aG);
 
   GF.addObjects({
   	player: new Player(),
-  	background: new Background(),
+//   	background: new Background(),
   	enemies: []
   });
 

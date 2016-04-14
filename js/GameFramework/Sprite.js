@@ -26,7 +26,7 @@ GameFramework = (function ($) {
     var getNext = function() {
       return Math.floor(delta / delay) + currrent;
     };
-    if (getNext() > size)
+    if (getNext() >= size)
       return getNext() % size;
     return getNext();
   }

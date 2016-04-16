@@ -147,6 +147,11 @@ GameFramework = (function($) {
     return center_distance < rad_distance * rad_distance;
   };
 
+  /**
+   * Checks if the polygon collides with another polygon
+   * @param  {Polygon}  other the polygon to check collision with
+   * @return {Boolean}        true if the polygons are colliding
+   */
   Polygon.prototype.isCollidingWith = function (other) {
     if (isBroadCollision(this, other)) {
       if (isPreciseCollision(this, other)) {
@@ -156,6 +161,11 @@ GameFramework = (function($) {
     return false;
   };
 
+  /**
+   * Creates a poligon ot of the set of points defined as arrays
+   * @param  {Array}    each argument represents one dot of a polygon
+   * @return {Polygon}  the generated polygon
+   */
   Polygon.CreateNewFromPoints = function() {
     var points = Array.prototype.slice.call(arguments);
     var vectors = [];

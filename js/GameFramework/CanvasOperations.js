@@ -113,5 +113,13 @@ GameFramework = (function ($) {
     };
   };
 
+  /**
+   * Returns the polygon of the visible canvas
+   * @return {Polygon} the polygon of the canvas
+   */
+  $.getScreenPolygon = function () {
+    return $.Polygon.CreateNewFromPoints([0, 0], [width, 0], [0, height], [width, height]);
+  };
+
   return $;
 }(GameFramework));

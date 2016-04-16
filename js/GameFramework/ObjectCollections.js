@@ -1,5 +1,6 @@
 GameFramework = (function ($) {
-  var collection = {};
+  var collection = {},
+      ownPropertiesNameCollection = [];
 
   /**
    * Adds object at their names to the collection
@@ -18,6 +19,7 @@ GameFramework = (function ($) {
       }
       collection[key] = objects[key];
       if (!$.hasOwnProperty(key)) {
+        ownPropertiesNameCollection.push(key);
         $[key] = collection[key];
       }
     }
@@ -69,6 +71,9 @@ GameFramework = (function ($) {
    * @return {GameFramework} Returns the current instance of GameFramework
    */
   $._removeAllObjects = function () {
+    $.getAllObjects().forEach(function (obj, i) {
+      obj.destroy();
+    });
     collection = {};
     return $;
   };
@@ -88,7 +93,9 @@ GameFramework = (function ($) {
       } else {
         if (!collection[key].isAlive()) {
           delete collection[key];
-          delete $[key];
+          if (ownPropertiesNameCollection.indexOf(key) !== -1) {
+            delete $[key];
+          }
         }
       }
     }

@@ -1,6 +1,6 @@
 describe("GameFramework >", function() {
   var canvas, ctx;
-  var width = height = 100;
+  var width = height = 1000;
 
   beforeEach(function () {
     jasmine.RequestAnimationFrame.install();
@@ -188,6 +188,10 @@ describe("GameFramework >", function() {
       var calls = GameFramework.getCTX().getCalls();
       expect(calls[calls.length - 1].name).toEqual("test");
       expect(calls[calls.length - 1].args.length).toEqual(1);
+    });
+
+    it("should return the screen polygon", function() {
+      expect(GameFramework.getScreenPolygon()).toEqual(GameFramework.Polygon.CreateNewFromPoints([0, 0], [width, 0], [0, height], [width, height]));
     });
   });
 
@@ -503,6 +507,167 @@ describe("GameFramework >", function() {
         obj1.destroy();
         expect(obj1.isAlive()).toBeFalsy();
         expect(obj1.sprite).toEqual(undefined);
+      });
+    });
+
+    describe("Canvas related methods > ", function () {
+      var obj, image, sprite;
+      var img = "";
+      var frameBounds = {x: 0, y: 0, w: 100, h: 100};
+      var objPos1 = new GameFramework.Vector(100, 100);
+      var objPos2 = new GameFramework.Vector(150, 150);
+
+      beforeEach(function() {
+        image = new Image();
+        image.src = img;
+        sprite1 = 
+          (new GameFramework.Sprite())
+          .setImage(image)
+          .addFrames([
+            { x: frameBounds.x, y: frameBounds.y, h: frameBounds.h, w: frameBounds.w }
+          ])
+          .setFrameDelay(100);
+
+        sprite2 = 
+          (new GameFramework.Sprite())
+          .setImage(image)
+          .addFrames([
+            { x: frameBounds.x, y: frameBounds.y, h: frameBounds.h, w: frameBounds.w }
+          ])
+          .setFrameDelay(100);
+
+        obj1 = 
+          (new GameFramework.DrawableObject())
+          .setSprite(sprite1)
+          .setPosition(objPos1);
+
+        obj2 = 
+          (new GameFramework.DrawableObject())
+          .setSprite(sprite2)
+          .setPosition(objPos2);
+
+        GameFramework
+          .addObjects({ obj1: obj1, obj2: obj2 })
+          .setUpdateObjectsFunction(function (time) { })
+          .startGame();
+
+        jasmine.RequestAnimationFrame.tick(0);
+      });
+
+      it("should detect when it is off screen", function() {
+        GameFramework.obj1.setPosition(new GameFramework.Vector(1200, 1200));
+        expect(GameFramework.obj1.isOffScreen()).toEqual(true);
+      });
+
+      it("should detect when it is not off screen", function() {
+        GameFramework.obj1.setPosition(new GameFramework.Vector(100, 100));
+        expect(GameFramework.obj1.isOffScreen()).toEqual(false);
+      });
+
+      it("should detect when it is touching the bottom border", function() {
+        GameFramework.obj1.setPosition(new GameFramework.Vector(900, 900));
+        expect(GameFramework.obj1.isTouchingBottomBorder()).toEqual(true);
+      });
+
+      it("should detect when it is not touching the bottom border", function() {
+        GameFramework.obj1.setPosition(new GameFramework.Vector(100, 100));
+        expect(GameFramework.obj1.isTouchingBottomBorder()).toEqual(false);
+      });
+
+      it("should detect when it is touching the top border", function() {
+        GameFramework.obj1.setPosition(new GameFramework.Vector(0, 0));
+        expect(GameFramework.obj1.isTouchingTopBorder()).toEqual(true);
+      });
+
+      it("should detect when it is not touching the top border", function() {
+        GameFramework.obj1.setPosition(new GameFramework.Vector(100, 100));
+        expect(GameFramework.obj1.isTouchingTopBorder()).toEqual(false);
+      });
+
+      describe("Set to stay on canvas true > ", function() {
+
+        beforeEach(function () {
+          GameFramework.obj1.setStaysOnCanvas(true);
+        });
+
+        it("should not change coordinates when off canvas", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(1200, 1200));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(1200, 1200));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(0, 0));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
+
+        it("should not change coordinates if touching the border", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(900, 900));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(900, 900));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(0, 0));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
+
+        it("should change coordinates if not at the border or off canvas", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(150, 150));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(151, 152));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
+
+        it("should change coordinates when touching border but speed goes the other way", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(0, 0));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
+      });
+
+      describe("Set to stay on canvas false > ", function() {
+
+        beforeEach(function () {
+          GameFramework.obj1.setStaysOnCanvas(false);
+        });
+
+        it("should change coordinates when off canvas", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(1200, 1200));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(1201, 1202));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
+
+        it("should change coordinates if touching the border", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(900, 900));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(901, 902));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
+
+        it("should change coordinates if not at the border or off canvas", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(150, 150));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(151, 152));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
+
+        it("should change coordinates when touching border but speed goes the other way", function() {
+          GameFramework.obj1.setPosition(new GameFramework.Vector(0, 0));
+          GameFramework.obj1.setSpeed(new GameFramework.Vector(1, 2));
+          jasmine.RequestAnimationFrame.tick(1000);
+          expect(GameFramework.obj1.position).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.speed).toEqual(new GameFramework.Vector(1, 2));
+          expect(GameFramework.obj1.acceleration).toEqual(new GameFramework.Vector(0, 0));
+        });
       });
     });
   });

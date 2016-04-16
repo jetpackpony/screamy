@@ -21,15 +21,8 @@ function Player() {
 
   this.setSprite(sprite);
   this.setPosition(new GF.Vector(50, 30));
+  this.setStaysOnCanvas(true);
 }
 
 Player.prototype = new GF.DrawableObject();
 Player.prototype.constructor = Player;
-
-Player.prototype.updateState = function() {
-  GF.DrawableObject.prototype.updateState.apply(this, arguments);
-
-  // if (this.isCollidingWith(GF.ground)) {
-    
-  // }
-};

@@ -19,6 +19,7 @@ GameFramework = (function ($) {
     this.sprite = undefined;
     this.exists = true;
     this.name = "";
+    this.staysOnCanvas = false;
     return this;
   };
 
@@ -121,10 +122,85 @@ GameFramework = (function ($) {
    * @return {DrawableObject} this
    */
   DrawableObject.prototype.updateState = function() {
-    var delta = $.getFrameDelta() / 1000;
+    var delta = $.getFrameDelta() / 1000,
+        old_position;
     this.speed = this.speed.add(this.acceleration.multiplyBy(delta));
+    old_position = this.position;
     this.position = this.position.add(this.speed.multiplyBy(delta));
+    if (this.staysOnCanvas && (this.isOffScreen() || this.isTouchingAnyBorder())) {
+      this.position = old_position;
+      this.stop();
+    }
     return this;
+  };
+
+  /**
+   * Returns true if the object is completely off screen, false otherwise
+   * @return {Boolean} true if the object is completely off screen, false otherwise
+   */
+  DrawableObject.prototype.isOffScreen = function() {
+    return !this.getPolygon().isCollidingWith($.getScreenPolygon());
+  };
+
+  /**
+   * Checks if the object is touching any border of the canvas
+   * @return {Boolean} true if the object is touching any border
+   */
+  DrawableObject.prototype.isTouchingAnyBorder = function() {
+    return this.isTouchingBottomBorder() || this.isTouchingTopBorder();
+  };
+
+  /**
+   * Checks if the object is touching the bottom border of the canvas
+   * @return {Boolean} true if the object is touching bottom border
+   */
+  DrawableObject.prototype.isTouchingBottomBorder = function() {
+    return this._isTouchingBorder("bottom");
+  };
+
+  /**
+   * Checks if the object is touching the top border of the canvas
+   * @return {Boolean} true if the object is touching top border
+   */
+  DrawableObject.prototype.isTouchingTopBorder = function() {
+    return this._isTouchingBorder("top");
+  };
+
+  /**
+   * Checks if the object is touching the specified border of the canvas
+   * @param  {String}  border the name of the border to check against
+   * @return {Boolean}        true if the object is touching the border
+   */
+  DrawableObject.prototype._isTouchingBorder = function(border) {
+    var borderPolygon,
+        w = $.getDimensions().width,
+        h = $.getDimensions().height;
+    switch (border) {
+      case "bottom":
+        borderPolygon = $.Polygon.CreateNewFromPoints([0, h], [w, h], [0, h + 1], [w, h + 1]);
+        break;
+      case "top":
+        borderPolygon = $.Polygon.CreateNewFromPoints([0, 0], [w, 0], [0, -1], [w, -1]);
+        break;
+    }
+    return borderPolygon.isCollidingWith(this.getPolygon());
+  };
+
+  /**
+   * Stops the object in its place
+   * @return {DrawableObject} this
+   */
+  DrawableObject.prototype.stop = function() {
+    this.setSpeed(new $.Vector(0, 0));
+    this.setAcceleration(new $.Vector(0, 0));
+  };
+
+  /**
+   * Sets the object to stay on canvas
+   * @param {Boolean} isStaysOnCanvas true for the object to always stay on canvas
+   */
+  DrawableObject.prototype.setStaysOnCanvas = function(isStaysOnCanvas) {
+    this.staysOnCanvas = isStaysOnCanvas;
   };
 
   return $;
